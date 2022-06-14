@@ -4,7 +4,7 @@
       <v-container fluid>
         <v-row justify="end">
           <v-btn
-            color="black"
+            id="connect"
             rounded
             class="ma-3 subtitle-1 font-weight-bold"
             @click="connect"
@@ -42,7 +42,7 @@
         </v-row>
         <v-row justify="center">
           <v-col :cols="12" :md="8">
-            <div id="title" class="text-center text-h2 font-weight-bold py-6">
+            <div id="title" class="text-center text-h2 text-uppercase font-weight-bold py-6">
               Mushroom Staking
             </div>
           </v-col>
@@ -50,7 +50,7 @@
             <v-row>
               <v-col :cols="12" :sm="6" :lg="6">
                 <v-card :height="450" color="#000" outlined class="mb-6">
-                  <v-card-title class="text-h6 text-uppercase font-weight-bold">Reward Pool</v-card-title>
+                  <v-card-title class="justify-center text-h6 text-uppercase font-weight-bold">Reward Pool</v-card-title>
                   <v-divider />
                   <v-card-text>
                     <v-row>
@@ -77,7 +77,7 @@
                           :min="0"
                           :suffix="currency"
                           autofocus
-                          color="#B8860B"
+                          color="#8B4513"
                           dense
                           hide-details
                           solo
@@ -104,7 +104,7 @@
               </v-col>
               <v-col :cols="12" :sm="6" :lg="6">
                 <v-card :height="450" color="#000" outlined>
-                  <v-card-title class="text-h6 text-uppercase font-weight-bold">My Staking</v-card-title>
+                  <v-card-title class="justify-center text-h6 text-uppercase font-weight-bold">My Staking</v-card-title>
                   <v-divider />
                   <v-card-text>
                     <v-row>
@@ -121,7 +121,7 @@
                     </v-row>
                     <v-row>
                       <v-col :cols="6" class="subtitle-1 text-uppercase font-weight-bold">Claimable</v-col>
-                      <v-col :cols="6" class="subtitle-1 text-uppercase font-weight-bold text-end">{{ formatNumber(estimatedRewards()) }} {{ currency }}</v-col>
+                      <v-col :cols="6" class="subtitle-1 text-uppercase font-weight-bold text-end"><AppAnimatedAmount :count="claimable" :decimals="decimals" /> {{ currency }}</v-col>
                     </v-row>
                     <v-row>
                       <v-col :cols="12">
@@ -163,12 +163,14 @@
 // import moment from 'moment';
 import { ethers } from 'ethers';
 import AppAlert from '@/components/AppAlert.vue';
+import AppAnimatedAmount from '@/components/AppAnimatedAmount.vue';
 import Staking from '@/contracts/Staking.json';
 
 export default {
   name: 'App',
   components: {
     AppAlert,
+    AppAnimatedAmount,
   },
   data: () => ({
     /**
@@ -191,6 +193,7 @@ export default {
     message: null,
     remainingSeconds: null,
     remainingTime: null,
+    claimable: 0,
   }),
   computed: {
     currency() {
@@ -244,11 +247,13 @@ export default {
       this.stakes = this.isStakeholder
         ? await this.contract.stakes(this.account)
         : [];
+      if (this.stakes) setInterval(() => this.calculateClaimable(), 1000);
     },
     connect() {
       this.loadAccount();
     },
     async deposit() {
+      if (this.amount <= 0) return;
       const amount = ethers.BigNumber.from(1).mul(ethers.FixedNumber.fromString(this.amount));
       const res = await this.contract.deposit({
         value: amount,
@@ -261,16 +266,16 @@ export default {
       await res.wait();
       window.location.reload();
     },
-    estimatedRewards() {
-      let reward = 0;
+    calculateClaimable() {
+      let rewards = 0;
       for (let i = 0; i < this.stakes.length; i += 1) {
         const { lastClaimDate, amount } = this.stakes[i];
-        reward += (((Math.floor(+new Date() / 1000) - lastClaimDate) * amount) * this.rewardRate) / 100 / 365 / 86400;
+        rewards += (((Math.floor(+new Date() / 1000) - lastClaimDate) * amount) * this.rewardRate) / 100 / 365 / 86400;
       }
-      return reward;
+      this.claimable = rewards;
     },
     formatNumber(number = 0) {
-      return Number(number / (10 ** this.decimals)).toFixed(4);
+      return Number(number / (10 ** this.decimals)).toFixed(6);
     },
   },
 };
@@ -285,21 +290,26 @@ export default {
 }
 #app {
   background-image: url('~@/assets/mushroom.jpg');
-  box-shadow: inset 0 0 0 100vmax rgb(0 0 0 / 25%)
+  box-shadow: inset 0 0 0 100vmax rgb(0 0 0 / 30%)
 }
 #title {
-  background: -webkit-linear-gradient(#B8860B, #999999);
+  background: -webkit-linear-gradient(#8B4513, #FFFFFF);
   -webkit-text-stroke: 2px #000000;
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
 }
+#connect {
+  background: #000000;
+  border: none !important;
+  opacity: 0.875;
+}
 .v-sheet.v-card {
-  border: 2px solid #B8860B !important;
+  border: 4px solid #8B4513 !important;
   border-radius: 16px !important;
   opacity: 0.925;
 }
 .v-input, .v-btn {
-  border: 2px solid #B8860B !important;
+  border: 3px solid #8B4513 !important;
 }
 .v-btn {
   height: 42px !important;
