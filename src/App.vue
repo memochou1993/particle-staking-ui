@@ -6,7 +6,7 @@
           <v-btn
             id="connect"
             rounded
-            class="ma-3 subtitle-1 font-weight-bold"
+            class="ma-5 subtitle-1 font-weight-bold"
             @click="connect"
           >
             <span
@@ -19,32 +19,34 @@
             />
           </v-btn>
         </v-row>
-        <v-row v-if="remainingSeconds > 0" justify="center">
-          <v-col :cols="8">
-            <v-row justify="center">
-              <v-col :cols="12" class="text-center">
-                Countdown to Lauch!
-              </v-col>
-              <v-col :cols="3" class="text-center">
-                {{ remainingTime.days }} Days
-              </v-col>
-              <v-col :cols="3" class="text-center">
-                {{ remainingTime.hours }} Hours
-              </v-col>
-              <v-col :cols="3" class="text-center">
-                {{ remainingTime.minutes }} Minutes
-              </v-col>
-              <v-col :cols="3" class="text-center">
-                {{ remainingTime.seconds }} Seconds
-              </v-col>
-            </v-row>
-          </v-col>
-        </v-row>
         <v-row justify="center">
           <v-col :cols="12" :md="8">
             <div id="title" class="text-center text-h2 text-uppercase font-weight-bold py-6">
               Mushroom Staking
             </div>
+          </v-col>
+          <v-col v-if="isOpened && !isStarted" :cols="12" :md="8">
+            <v-card color="#000" outlined>
+              <v-card-title class="justify-center text-h4 text-uppercase font-weight-bold">
+                Countdown to Launch!
+              </v-card-title>
+              <v-card-text>
+                <v-row justify="center">
+                  <v-col :cols="3" class="text-center text-h5 font-weight-bold">
+                    {{ remainingTime.days }} Days
+                  </v-col>
+                  <v-col :cols="3" class="text-center text-h5 font-weight-bold">
+                    {{ remainingTime.hours }} Hours
+                  </v-col>
+                  <v-col :cols="3" class="text-center text-h5 font-weight-bold">
+                    {{ remainingTime.minutes }} Minutes
+                  </v-col>
+                  <v-col :cols="3" class="text-center text-h5 font-weight-bold">
+                    {{ remainingTime.seconds }} Seconds
+                  </v-col>
+                </v-row>
+              </v-card-text>
+            </v-card>
           </v-col>
           <v-col :cols="12" :md="8">
             <v-row>
@@ -73,22 +75,22 @@
                       <v-col :cols="6">
                         <v-text-field
                           v-model="amount"
-                          :disabled="!account"
                           :min="0"
+                          :readonly="!account || !isOpened"
                           :suffix="currency"
                           autofocus
                           color="#8B4513"
                           dense
                           hide-details
-                          solo
                           rounded
+                          solo
                           type="number"
                           class="mb-3"
                         />
                       </v-col>
                       <v-col :cols="6">
                         <v-btn
-                          :disabled="!account"
+                          :disabled="!account || !isOpened"
                           block
                           outlined
                           rounded
@@ -126,7 +128,7 @@
                     <v-row>
                       <v-col :cols="12">
                         <v-btn
-                          :disabled="!account"
+                          :disabled="!account || !isOpened || !isStarted"
                           block
                           outlined
                           rounded
@@ -160,11 +162,11 @@
 </template>
 
 <script>
-// import moment from 'moment';
+import moment from 'moment';
 import { ethers } from 'ethers';
 import AppAlert from '@/components/AppAlert.vue';
 import AppAnimatedAmount from '@/components/AppAnimatedAmount.vue';
-import Staking from '@/contracts/Staking.json';
+import MushroomStaking from '@/contracts/MushroomStaking.json';
 
 export default {
   name: 'App',
@@ -180,6 +182,7 @@ export default {
     account: null,
     accountBalance: null,
     contractBalance: null,
+    startTime: null,
     rewardRate: null,
     isStakeholder: null,
     stakes: [],
@@ -190,9 +193,9 @@ export default {
     /**
      * display data
      */
-    message: null,
-    remainingSeconds: null,
-    remainingTime: null,
+    message: '',
+    remainingTime: {},
+    remainingSeconds: 0,
     claimable: 0,
   }),
   computed: {
@@ -203,10 +206,16 @@ export default {
       return this.web3Provider.getSigner();
     },
     contract() {
-      return new ethers.Contract(process.env.VUE_APP_CONTRACT_ADDRESS, Staking.abi, this.signer);
+      return new ethers.Contract(process.env.VUE_APP_CONTRACT_ADDRESS, MushroomStaking.abi, this.signer);
     },
     decimals() {
       return 18;
+    },
+    isOpened() {
+      return Number(this.startTime) > 0;
+    },
+    isStarted() {
+      return Number(this.startTime) < Math.floor(+new Date() / 1000) || this.remainingSeconds < 0;
     },
     staked() {
       return this.stakes.reduce((pre, cur) => pre.add(cur.amount), ethers.BigNumber.from(0));
@@ -230,6 +239,8 @@ export default {
       await this.loadWeb3Provider();
       await this.loadAccount();
       if (this.account) await this.loadData();
+      if (this.isOpened) await this.countdown();
+      if (this.isOpened) this.calculateClaimable();
     },
     loadWeb3Provider() {
       this.web3Provider = new ethers.providers.Web3Provider(window.ethereum);
@@ -242,12 +253,12 @@ export default {
     async loadData() {
       this.accountBalance = await this.web3Provider.getBalance(this.account);
       this.contractBalance = await this.contract.contractBalance();
+      this.startTime = await this.contract.startTime();
       this.rewardRate = await this.contract.rewardRate();
       this.isStakeholder = await this.contract.isStakeholder(this.account);
       this.stakes = this.isStakeholder
         ? await this.contract.stakes(this.account)
         : [];
-      if (this.stakes) setInterval(() => this.calculateClaimable(), 1000);
     },
     connect() {
       this.loadAccount();
@@ -266,13 +277,32 @@ export default {
       await res.wait();
       window.location.reload();
     },
+    async countdown() {
+      const interval = 1000;
+      const unit = 'milliseconds';
+      let duration = moment.duration((Number(this.startTime) - +new Date() / 1000) * 1000, unit);
+      const timer = setInterval(() => {
+        duration = moment.duration(duration - interval, unit);
+        this.remainingTime = {
+          days: Math.floor(duration.asDays()),
+          hours: duration.hours(),
+          minutes: duration.minutes(),
+          seconds: duration.seconds(),
+        };
+        this.remainingSeconds = Math.floor(duration.asSeconds());
+        if (this.isStarted) clearInterval(timer);
+      }, interval);
+    },
     calculateClaimable() {
-      let rewards = 0;
-      for (let i = 0; i < this.stakes.length; i += 1) {
-        const { lastClaimDate, amount } = this.stakes[i];
-        rewards += (((Math.floor(+new Date() / 1000) - lastClaimDate) * amount) * this.rewardRate) / 100 / 365 / 86400;
-      }
-      this.claimable = rewards;
+      setInterval(() => {
+        if (!this.stakes || !this.isStarted) return;
+        let rewards = 0;
+        for (let i = 0; i < this.stakes.length; i += 1) {
+          const { lastClaimDate, amount } = this.stakes[i];
+          rewards += (((Math.floor(+new Date() / 1000) - lastClaimDate) * amount) * this.rewardRate) / 100 / 365 / 86400;
+        }
+        this.claimable = rewards;
+      }, 1000);
     },
     formatNumber(number = 0) {
       return Number(number / (10 ** this.decimals)).toFixed(6);
@@ -283,8 +313,15 @@ export default {
 
 <style lang="scss">
 .v-application {
-  font-family: 'Varela Round', sans-serif;
-  .text-h6, .subtitle-1 {
+  font-family: 'Varela Round', sans-serif !important;
+  .text-h1,
+  .text-h2,
+  .text-h3,
+  .text-h4,
+  .text-h5,
+  .text-h6,
+  .subtitle-1,
+  .subtitle-2 {
     font-family: 'Varela Round', sans-serif !important;
   }
 }
@@ -293,8 +330,9 @@ export default {
   box-shadow: inset 0 0 0 100vmax rgb(0 0 0 / 30%)
 }
 #title {
+  font-family: "Roboto", sans-serif !important;
   background: -webkit-linear-gradient(#8B4513, #FFFFFF);
-  -webkit-text-stroke: 2px #000000;
+  -webkit-text-stroke: 3px #000000;
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
 }
