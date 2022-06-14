@@ -54,7 +54,7 @@
                   <v-divider />
                   <v-card-text>
                     <v-row>
-                      <v-col :cols="6" class="subtitle-1 text-uppercase font-weight-bold">Contract Balance</v-col>
+                      <v-col :cols="6" class="subtitle-1 text-uppercase font-weight-bold">Total Staked</v-col>
                       <v-col :cols="6" class="subtitle-1 text-uppercase font-weight-bold text-end">{{ formatNumber(contractBalance) }} {{ currency }}</v-col>
                     </v-row>
                     <v-row>
@@ -108,7 +108,7 @@
                   <v-divider />
                   <v-card-text>
                     <v-row>
-                      <v-col :cols="6" class="subtitle-1 text-uppercase font-weight-bold">Account Balance</v-col>
+                      <v-col :cols="6" class="subtitle-1 text-uppercase font-weight-bold">Balance</v-col>
                       <v-col :cols="6" class="subtitle-1 text-uppercase font-weight-bold text-end">{{ formatNumber(accountBalance) }} {{ currency }}</v-col>
                     </v-row>
                     <v-row>
