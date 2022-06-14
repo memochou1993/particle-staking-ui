@@ -20,7 +20,7 @@
           </v-btn>
         </v-row>
         <v-row justify="center">
-          <v-col :cols="12" :md="8">
+          <v-col :cols="12" :md="8" class="pt-0">
             <div id="title" class="text-center text-h2 text-uppercase font-weight-bold py-6">
               Mushroom Staking
             </div>
@@ -51,41 +51,35 @@
           <v-col :cols="12" :md="8">
             <v-row>
               <v-col :cols="12" :sm="6" :lg="6">
-                <v-card :height="450" color="#000" outlined class="mb-6">
-                  <v-card-title class="justify-center text-h6 text-uppercase font-weight-bold">Reward Pool</v-card-title>
+                <v-card color="#000000" outlined class="mb-6">
+                  <v-card-title class="justify-center text-h6 text-uppercase font-weight-bold">Hire Validators</v-card-title>
                   <v-divider />
                   <v-card-text>
                     <v-row>
-                      <v-col :cols="6" class="subtitle-1 text-uppercase font-weight-bold">Total Staked</v-col>
-                      <v-col :cols="6" class="subtitle-1 text-uppercase font-weight-bold text-end">{{ formatNumber(contractBalance) }} {{ currency }}</v-col>
+                      <v-col :cols="6" class="subtitle-1 text-uppercase font-weight-bold">Wallet</v-col>
+                      <v-col :cols="6" class="subtitle-1 text-uppercase font-weight-bold text-end">{{ formatNumber(accountBalance) }} {{ currency }}</v-col>
                     </v-row>
                     <v-row>
-                      <v-col :cols="6" class="subtitle-1 text-uppercase font-weight-bold">Daily Return</v-col>
-                      <v-col :cols="6" class="subtitle-1 text-uppercase font-weight-bold text-end">{{ Number('10').toLocaleString() }}%</v-col>
-                    </v-row>
-                    <v-row>
-                      <v-col :cols="6" class="subtitle-1 text-uppercase font-weight-bold">APR</v-col>
-                      <v-col :cols="6" class="subtitle-1 text-uppercase font-weight-bold text-end">{{ Number('3650').toLocaleString() }}%</v-col>
-                    </v-row>
-                    <v-row>
-                      <v-col :cols="6" class="subtitle-1 text-uppercase font-weight-bold">Fee</v-col>
-                      <v-col :cols="6" class="subtitle-1 text-uppercase font-weight-bold text-end">{{ Number('1').toLocaleString() }}%</v-col>
+                      <v-col :cols="6" class="subtitle-1 text-uppercase font-weight-bold">Level</v-col>
+                      <v-col :cols="6" class="subtitle-1 text-uppercase font-weight-bold text-end">
+                        <span v-if="stakeholder">{{ stakeholder.level }}</span>
+                        <span v-else>0</span>
+                      </v-col>
                     </v-row>
                     <v-row>
                       <v-col :cols="6">
                         <v-text-field
                           v-model="amount"
-                          :min="0"
                           :readonly="!account || !isOpened"
+                          :step="0.01"
                           :suffix="currency"
                           autofocus
-                          color="#8B4513"
+                          color="#C46210"
                           dense
                           hide-details
                           rounded
                           solo
                           type="number"
-                          class="mb-3"
                         />
                       </v-col>
                       <v-col :cols="6">
@@ -101,21 +95,9 @@
                         </v-btn>
                       </v-col>
                     </v-row>
-                  </v-card-text>
-                </v-card>
-              </v-col>
-              <v-col :cols="12" :sm="6" :lg="6">
-                <v-card :height="450" color="#000" outlined>
-                  <v-card-title class="justify-center text-h6 text-uppercase font-weight-bold">My Staking</v-card-title>
-                  <v-divider />
-                  <v-card-text>
                     <v-row>
-                      <v-col :cols="6" class="subtitle-1 text-uppercase font-weight-bold">Balance</v-col>
-                      <v-col :cols="6" class="subtitle-1 text-uppercase font-weight-bold text-end">{{ formatNumber(accountBalance) }} {{ currency }}</v-col>
-                    </v-row>
-                    <v-row>
-                      <v-col :cols="6" class="subtitle-1 text-uppercase font-weight-bold">Staked</v-col>
-                      <v-col :cols="6" class="subtitle-1 text-uppercase font-weight-bold text-end">{{ formatNumber(staked) }} {{ currency }}</v-col>
+                      <v-col :cols="6" class="subtitle-1 text-uppercase font-weight-bold">Hired</v-col>
+                      <v-col :cols="6" class="subtitle-1 text-uppercase font-weight-bold text-end">{{ formatNumber(staked) * 1e6 }}</v-col>
                     </v-row>
                     <v-row>
                       <v-col :cols="6" class="subtitle-1 text-uppercase font-weight-bold">Claimed</v-col>
@@ -128,7 +110,7 @@
                     <v-row>
                       <v-col :cols="12">
                         <v-btn
-                          :disabled="!account || !isOpened || !isStarted"
+                          :disabled="!account || !isOpened || !isStarted || !claimable"
                           block
                           outlined
                           rounded
@@ -138,6 +120,30 @@
                           Claim
                         </v-btn>
                       </v-col>
+                    </v-row>
+                  </v-card-text>
+                </v-card>
+              </v-col>
+              <v-col :cols="12" :sm="6" :lg="6">
+                <v-card color="#000000" outlined>
+                  <v-card-title class="justify-center text-h6 text-uppercase font-weight-bold">Info</v-card-title>
+                  <v-divider />
+                  <v-card-text>
+                    <v-row>
+                      <v-col :cols="6" class="subtitle-1 text-uppercase font-weight-bold">Contract</v-col>
+                      <v-col :cols="6" class="subtitle-1 text-uppercase font-weight-bold text-end">{{ formatNumber(contractBalance) }} {{ currency }}</v-col>
+                    </v-row>
+                    <v-row>
+                      <v-col :cols="6" class="subtitle-1 text-uppercase font-weight-bold">Daily Return</v-col>
+                      <v-col :cols="6" class="subtitle-1 text-uppercase font-weight-bold text-end">{{ Number(rewardRate / 365).toFixed(0) }} %</v-col>
+                    </v-row>
+                    <v-row>
+                      <v-col :cols="6" class="subtitle-1 text-uppercase font-weight-bold">APR</v-col>
+                      <v-col :cols="6" class="subtitle-1 text-uppercase font-weight-bold text-end">{{ Number(rewardRate).toLocaleString() }}%</v-col>
+                    </v-row>
+                    <v-row>
+                      <v-col :cols="6" class="subtitle-1 text-uppercase font-weight-bold">Fee</v-col>
+                      <v-col :cols="6" class="subtitle-1 text-uppercase font-weight-bold text-end">{{ Number('2').toLocaleString() }}%</v-col>
                     </v-row>
                   </v-card-text>
                 </v-card>
@@ -168,6 +174,9 @@ import AppAlert from '@/components/AppAlert.vue';
 import AppAnimatedAmount from '@/components/AppAnimatedAmount.vue';
 import MushroomStaking from '@/contracts/MushroomStaking.json';
 
+const MIN_AMOUNT = 0.01;
+const MAX_AMOUNT = 25;
+
 export default {
   name: 'App',
   components: {
@@ -183,8 +192,9 @@ export default {
     accountBalance: null,
     contractBalance: null,
     startTime: null,
-    rewardRate: null,
+    stakeholder: null,
     isStakeholder: null,
+    rewardRate: null,
     stakes: [],
     /**
      * form data
@@ -225,7 +235,13 @@ export default {
     },
   },
   watch: {
-    //
+    amount(after) {
+      if (Number(after) === 0) return;
+      this.$nextTick(() => {
+        if (Number(after) < MIN_AMOUNT) this.amount = MIN_AMOUNT;
+        if (Number(after) > MAX_AMOUNT) this.amount = MAX_AMOUNT;
+      });
+    },
   },
   created() {
     if (!window.ethereum) {
@@ -254,17 +270,18 @@ export default {
       this.accountBalance = await this.web3Provider.getBalance(this.account);
       this.contractBalance = await this.contract.contractBalance();
       this.startTime = await this.contract.startTime();
-      this.rewardRate = await this.contract.rewardRate();
+      this.stakeholder = await this.contract.stakeholders(this.account);
       this.isStakeholder = await this.contract.isStakeholder(this.account);
+      this.rewardRate = await this.contract.rewardRateOf(this.account);
       this.stakes = this.isStakeholder
-        ? await this.contract.stakes(this.account)
+        ? await this.contract.stakesOf(this.account)
         : [];
     },
     connect() {
       this.loadAccount();
     },
     async deposit() {
-      if (this.amount <= 0) return;
+      if (!Number(this.amount)) return;
       const amount = ethers.BigNumber.from(1).mul(ethers.FixedNumber.fromString(this.amount));
       const res = await this.contract.deposit({
         value: amount,
@@ -296,12 +313,12 @@ export default {
     calculateClaimable() {
       setInterval(() => {
         if (!this.stakes || !this.isStarted) return;
-        let rewards = 0;
+        let claimable = 0;
         for (let i = 0; i < this.stakes.length; i += 1) {
-          const { lastClaimDate, amount } = this.stakes[i];
-          rewards += (((Math.floor(+new Date() / 1000) - lastClaimDate) * amount) * this.rewardRate) / 100 / 365 / 86400;
+          const { amount, rewardRate, lastClaimDate } = this.stakes[i];
+          claimable += (((Math.floor(+new Date() / 1000) - Number(lastClaimDate)) * Number(amount)) * Number(rewardRate)) / 100 / 365 / 86400;
         }
-        this.claimable = rewards;
+        this.claimable = claimable;
       }, 1000);
     },
     formatNumber(number = 0) {
@@ -331,7 +348,7 @@ export default {
 }
 #title {
   font-family: "Roboto", sans-serif !important;
-  background: -webkit-linear-gradient(#8B4513, #FFFFFF);
+  background: -webkit-linear-gradient(#C46210, #FFFFFF);
   -webkit-text-stroke: 3px #000000;
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
@@ -342,12 +359,12 @@ export default {
   opacity: 0.875;
 }
 .v-sheet.v-card {
-  border: 4px solid #8B4513 !important;
+  border: 4px solid #C46210 !important;
   border-radius: 16px !important;
-  opacity: 0.925;
+  opacity: 0.9;
 }
 .v-input, .v-btn {
-  border: 3px solid #8B4513 !important;
+  border: 3px solid #C46210 !important;
 }
 .v-btn {
   height: 42px !important;
