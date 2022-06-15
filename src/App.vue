@@ -56,15 +56,12 @@
                   <v-divider />
                   <v-card-text>
                     <v-row>
-                      <v-col :cols="6" class="subtitle-1 text-uppercase font-weight-bold">Wallet</v-col>
-                      <v-col :cols="6" class="subtitle-1 text-uppercase font-weight-bold text-end">{{ formatNumber(accountBalance) }} {{ currency }}</v-col>
+                      <v-col :cols="6" class="subtitle-1 text-uppercase font-weight-bold white--text">Wallet</v-col>
+                      <v-col :cols="6" class="subtitle-1 text-uppercase font-weight-bold white--text text-end">{{ formatNumber(accountBalance) }} {{ currency }}</v-col>
                     </v-row>
                     <v-row>
-                      <v-col :cols="6" class="subtitle-1 text-uppercase font-weight-bold">Level</v-col>
-                      <v-col :cols="6" class="subtitle-1 text-uppercase font-weight-bold text-end">
-                        <span v-if="stakeholder">{{ stakeholder.level }}</span>
-                        <span v-else>0</span>
-                      </v-col>
+                      <v-col :cols="6" class="subtitle-1 text-uppercase font-weight-bold white--text">Level</v-col>
+                      <v-col :cols="6" class="subtitle-1 text-uppercase font-weight-bold white--text text-end">{{ stakeholder ? stakeholder.level : 0 }}</v-col>
                     </v-row>
                     <v-row>
                       <v-col :cols="6">
@@ -96,16 +93,16 @@
                       </v-col>
                     </v-row>
                     <v-row>
-                      <v-col :cols="6" class="subtitle-1 text-uppercase font-weight-bold">Hired</v-col>
-                      <v-col :cols="6" class="subtitle-1 text-uppercase font-weight-bold text-end">{{ formatNumber(staked) * 1e6 }}</v-col>
+                      <v-col :cols="6" class="subtitle-1 text-uppercase font-weight-bold white--text">Hired</v-col>
+                      <v-col :cols="6" class="subtitle-1 text-uppercase font-weight-bold white--text text-end">{{ (formatNumber(staked) * 1e6).toLocaleString() }} V</v-col>
                     </v-row>
                     <v-row>
-                      <v-col :cols="6" class="subtitle-1 text-uppercase font-weight-bold">Claimed</v-col>
-                      <v-col :cols="6" class="subtitle-1 text-uppercase font-weight-bold text-end">{{ formatNumber(claimed) }} {{ currency }}</v-col>
+                      <v-col :cols="6" class="subtitle-1 text-uppercase font-weight-bold white--text">Claimed</v-col>
+                      <v-col :cols="6" class="subtitle-1 text-uppercase font-weight-bold white--text text-end">{{ formatNumber(claimed) }} {{ currency }}</v-col>
                     </v-row>
                     <v-row>
-                      <v-col :cols="6" class="subtitle-1 text-uppercase font-weight-bold">Claimable</v-col>
-                      <v-col :cols="6" class="subtitle-1 text-uppercase font-weight-bold text-end"><AppAnimatedAmount :count="claimable" :decimals="decimals" /> {{ currency }}</v-col>
+                      <v-col :cols="6" class="subtitle-1 text-uppercase font-weight-bold white--text">Claimable</v-col>
+                      <v-col :cols="6" class="subtitle-1 text-uppercase font-weight-bold white--text text-end"><AppAnimatedAmount :count="claimable" :decimals="decimals" /> {{ currency }}</v-col>
                     </v-row>
                     <v-row>
                       <v-col :cols="12">
@@ -130,20 +127,20 @@
                   <v-divider />
                   <v-card-text>
                     <v-row>
-                      <v-col :cols="6" class="subtitle-1 text-uppercase font-weight-bold">Contract</v-col>
-                      <v-col :cols="6" class="subtitle-1 text-uppercase font-weight-bold text-end">{{ formatNumber(contractBalance) }} {{ currency }}</v-col>
+                      <v-col :cols="6" class="subtitle-1 text-uppercase font-weight-bold white--text">Contract</v-col>
+                      <v-col :cols="6" class="subtitle-1 text-uppercase font-weight-bold white--text text-end">{{ formatNumber(contractBalance) }} {{ currency }}</v-col>
                     </v-row>
                     <v-row>
-                      <v-col :cols="6" class="subtitle-1 text-uppercase font-weight-bold">Daily Return</v-col>
-                      <v-col :cols="6" class="subtitle-1 text-uppercase font-weight-bold text-end">{{ Number(rewardRate / 365).toFixed(0) }} %</v-col>
+                      <v-col :cols="6" class="subtitle-1 text-uppercase font-weight-bold white--text">Daily Return</v-col>
+                      <v-col :cols="6" class="subtitle-1 text-uppercase font-weight-bold white--text text-end">{{ Number(rewardRate / 365).toFixed(0) }} %</v-col>
                     </v-row>
                     <v-row>
-                      <v-col :cols="6" class="subtitle-1 text-uppercase font-weight-bold">APR</v-col>
-                      <v-col :cols="6" class="subtitle-1 text-uppercase font-weight-bold text-end">{{ Number(rewardRate).toLocaleString() }}%</v-col>
+                      <v-col :cols="6" class="subtitle-1 text-uppercase font-weight-bold white--text">APR</v-col>
+                      <v-col :cols="6" class="subtitle-1 text-uppercase font-weight-bold white--text text-end">{{ Number(rewardRate).toLocaleString() }}%</v-col>
                     </v-row>
                     <v-row>
-                      <v-col :cols="6" class="subtitle-1 text-uppercase font-weight-bold">Fee</v-col>
-                      <v-col :cols="6" class="subtitle-1 text-uppercase font-weight-bold text-end">{{ Number('2').toLocaleString() }}%</v-col>
+                      <v-col :cols="6" class="subtitle-1 text-uppercase font-weight-bold white--text">Fee</v-col>
+                      <v-col :cols="6" class="subtitle-1 text-uppercase font-weight-bold white--text text-end">2%</v-col>
                     </v-row>
                   </v-card-text>
                 </v-card>
@@ -361,7 +358,7 @@ export default {
 .v-sheet.v-card {
   border: 4px solid #C46210 !important;
   border-radius: 16px !important;
-  opacity: 0.9;
+  opacity: 0.875;
 }
 .v-input, .v-btn {
   border: 3px solid #C46210 !important;
