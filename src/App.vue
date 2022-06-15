@@ -207,7 +207,7 @@
                         </v-row>
                         <div class="mb-4">
                           <v-progress-linear
-                            :buffer-value="calculateProgress(stake) * (stake.rewardRate / 3650) * 5"
+                            :buffer-value="calculateProgress(stake) * (stake.rewardRate / defaultAPR) * 5"
                             :height="10"
                             :value="calculateClaimable(stake) > 0 ? calculateProgress(stake) : 0"
                             color="#009688"
@@ -293,6 +293,9 @@ export default {
     decimals() {
       return 18;
     },
+    defaultAPR() {
+      return 365 * 8;
+    },
     isOwner() {
       return String(this.account).toUpperCase() === String(this.owner).toUpperCase();
     },
@@ -354,7 +357,7 @@ export default {
       this.startTime = await this.contract.startTime();
       this.stakeholder = await this.contract.stakeholders(this.account);
       this.isStakeholder = await this.contract.isStakeholder(this.account);
-      this.rewardRate = this.isStakeholder ? await this.contract.rewardRateOf(this.account) : 3650;
+      this.rewardRate = this.isStakeholder ? await this.contract.rewardRateOf(this.account) : this.defaultAPR;
       this.stakes = this.isStakeholder ? await this.contract.stakesOf(this.account) : [];
     },
     connect() {
