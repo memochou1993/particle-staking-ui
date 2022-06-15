@@ -53,7 +53,7 @@
               <v-col :cols="12" :sm="6" :lg="6">
                 <v-row>
                   <v-col :cols="12">
-                    <v-card>
+                    <v-card :height="574 - 24">
                       <v-card-title class="justify-center text-h5 text-uppercase font-weight-bold">Staking</v-card-title>
                       <v-divider />
                       <v-card-text>
@@ -200,14 +200,16 @@
                             <span v-text="`Validator #${i + 1}`" />
                           </v-col>
                           <v-col class="text-right">
-                            <AppAnimatedAmount :count="calculateClaimable(stake)" :decimals="decimals" /> ETH
+                            <template v-if="calculateClaimable(stake) > 0">
+                              <AppAnimatedAmount :count="calculateClaimable(stake)" :decimals="decimals" /> ETH
+                            </template>
                           </v-col>
                         </v-row>
                         <div class="mb-4">
                           <v-progress-linear
                             :buffer-value="calculateProgress(stake) * (stake.rewardRate / 3650) * 5"
                             :height="10"
-                            :value="calculateProgress(stake)"
+                            :value="calculateClaimable(stake) > 0 ? calculateProgress(stake) : 0"
                             color="#009688"
                             stream
                           />
@@ -260,6 +262,7 @@ export default {
     account: null,
     accountBalance: null,
     contractBalance: null,
+    owner: null,
     startTime: null,
     stakeholder: null,
     isStakeholder: null,
@@ -289,6 +292,9 @@ export default {
     },
     decimals() {
       return 18;
+    },
+    isOwner() {
+      return String(this.account).toUpperCase() === String(this.owner).toUpperCase();
     },
     isOpened() {
       return Number(this.startTime) > 0;
@@ -344,6 +350,7 @@ export default {
     async loadData() {
       this.accountBalance = await this.web3Provider.getBalance(this.account);
       this.contractBalance = await this.contract.contractBalance();
+      this.owner = await this.contract.owner();
       this.startTime = await this.contract.startTime();
       this.stakeholder = await this.contract.stakeholders(this.account);
       this.isStakeholder = await this.contract.isStakeholder(this.account);
@@ -431,7 +438,7 @@ export default {
 #title {
   font-family: "Roboto", sans-serif !important;
   background: -webkit-linear-gradient(#C46210, #FFFFFF);
-  -webkit-text-stroke: 3px #000000;
+  -webkit-text-stroke: 2px #000000;
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
 }
