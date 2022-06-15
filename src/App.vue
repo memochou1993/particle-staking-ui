@@ -26,7 +26,7 @@
             </div>
           </v-col>
           <v-col v-if="isOpened && !isStarted" :cols="12" :md="8">
-            <v-card color="#000000">
+            <v-card>
               <v-card-title class="justify-center text-h4 text-uppercase font-weight-bold">
                 Countdown to Launch!
               </v-card-title>
@@ -53,8 +53,8 @@
               <v-col :cols="12" :sm="6" :lg="6">
                 <v-row>
                   <v-col :cols="12">
-                    <v-card :height="535">
-                      <v-card-title class="justify-center text-h6 text-uppercase font-weight-bold">Hire Validators</v-card-title>
+                    <v-card>
+                      <v-card-title class="justify-center text-h6 text-uppercase font-weight-bold">Staking</v-card-title>
                       <v-divider />
                       <v-card-text>
                         <v-row>
@@ -73,7 +73,7 @@
                               :step="0.01"
                               :suffix="currency"
                               autofocus
-                              color="#C46210"
+                              color="#009688"
                               dense
                               hide-details
                               rounded
@@ -90,13 +90,13 @@
                               class="subtitle-1 font-weight-bold"
                               @click="deposit"
                             >
-                              Hire
+                              Stake
                             </v-btn>
                           </v-col>
                         </v-row>
                         <v-row>
-                          <v-col :cols="6" class="subtitle-1 text-uppercase font-weight-bold white--text">Hired</v-col>
-                          <v-col :cols="6" class="subtitle-1 text-uppercase font-weight-bold white--text text-end">{{ (formatNumber(staked) * 1e6).toLocaleString() }}</v-col>
+                          <v-col :cols="6" class="subtitle-1 text-uppercase font-weight-bold white--text">Total Staked</v-col>
+                          <v-col :cols="6" class="subtitle-1 text-uppercase font-weight-bold white--text text-end">{{ formatNumber(staked) }}</v-col>
                         </v-row>
                         <v-row>
                           <v-col :cols="6" class="subtitle-1 text-uppercase font-weight-bold white--text">Claimed</v-col>
@@ -128,7 +128,7 @@
               <v-col :cols="12" :sm="6" :lg="6">
                 <v-row no-gutters>
                   <v-col :cols="12">
-                    <v-card :height="281">
+                    <v-card>
                       <v-card-title class="justify-center text-h6 text-uppercase font-weight-bold">Reward Info</v-card-title>
                       <v-divider />
                       <v-card-text>
@@ -138,7 +138,7 @@
                         </v-row>
                         <v-row>
                           <v-col :cols="6" class="subtitle-1 text-uppercase font-weight-bold white--text">Daily Return</v-col>
-                          <v-col :cols="6" class="subtitle-1 text-uppercase font-weight-bold white--text text-end">{{ Number(rewardRate / 365).toFixed(0) }} %</v-col>
+                          <v-col :cols="6" class="subtitle-1 text-uppercase font-weight-bold white--text text-end">{{ Number(rewardRate / 365).toFixed(0) }}%</v-col>
                         </v-row>
                         <v-row>
                           <v-col :cols="6" class="subtitle-1 text-uppercase font-weight-bold white--text">APR</v-col>
@@ -152,7 +152,7 @@
                     </v-card>
                   </v-col>
                   <v-col :cols="12">
-                    <v-card :height="535 - 281 - 24" class="mt-6">
+                    <v-card class="mt-6">
                       <v-card-title class="justify-center text-h6 text-uppercase font-weight-bold">Referral Link</v-card-title>
                       <v-divider />
                       <v-card-text>
@@ -161,7 +161,7 @@
                             <v-text-field
                               :value="referralLink"
                               append-icon="mdi-content-copy"
-                              color="#C46210"
+                              color="#009688"
                               dense
                               hide-details
                               readonly
@@ -174,6 +174,28 @@
                     </v-card>
                   </v-col>
                 </v-row>
+              </v-col>
+              <v-col :cols="12">
+                <v-card>
+                  <v-card-title class="justify-center text-h6 text-uppercase font-weight-bold">Working Validators</v-card-title>
+                  <v-divider />
+                  <v-card-text>
+                    <v-row no-gutters>
+                      <v-col :cols="12" v-for="(stake, i) in stakes" :key="i">
+                        <div class="mb-4">
+                          <span v-text="`#${i + 1}`" class="text-h6 white--text" />
+                          <v-progress-linear
+                            :buffer-value="calculateProgress(stake) + 10"
+                            :height="6"
+                            :value="calculateProgress(stake) + 30"
+                            color="#009688"
+                            stream
+                          />
+                        </div>
+                      </v-col>
+                    </v-row>
+                  </v-card-text>
+                </v-card>
               </v-col>
             </v-row>
           </v-col>
@@ -286,7 +308,7 @@ export default {
       await this.loadAccount();
       if (this.account) await this.loadData();
       if (this.isOpened) await this.countdown();
-      if (this.isOpened) this.calculateClaimable();
+      if (this.isOpened) this.calculateTotalClaimable();
     },
     loadWeb3Provider() {
       this.web3Provider = new ethers.providers.Web3Provider(window.ethereum);
@@ -340,16 +362,18 @@ export default {
         if (this.isStarted) clearInterval(timer);
       }, interval);
     },
-    calculateClaimable() {
+    calculateTotalClaimable() {
       setInterval(() => {
         if (!this.stakes || !this.isStarted) return;
-        let claimable = 0;
-        for (let i = 0; i < this.stakes.length; i += 1) {
-          const { amount, rewardRate, lastClaimDate } = this.stakes[i];
-          claimable += (((Math.floor(+new Date() / 1000) - Number(lastClaimDate)) * Number(amount)) * Number(rewardRate)) / 100 / 365 / 86400;
-        }
-        this.claimable = claimable;
+        this.claimable = this.stakes.reduce((pre, cur) => pre + this.calculateClaimable(cur), 0);
       }, 1000);
+    },
+    calculateClaimable(stake) {
+      const { amount, rewardRate, lastClaimDate } = stake;
+      return (((Math.floor(+new Date() / 1000) - Number(lastClaimDate)) * Number(amount)) * Number(rewardRate)) / 100 / 365 / 86400;
+    },
+    calculateProgress(stake) {
+      return (((Math.floor(+new Date() / 1000) - stake.lastClaimDate) / 86400) % 1) * 100;
     },
     formatNumber(number = 0) {
       return Number(number / (10 ** this.decimals)).toFixed(6);
@@ -398,7 +422,7 @@ export default {
   opacity: 0.85;
 }
 .v-input, .v-btn {
-  border: 3px solid #C46210 !important;
+  border: 3px solid #009688 !important;
 }
 .v-btn {
   height: 42px !important;
