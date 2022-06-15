@@ -22,7 +22,7 @@
         <v-row justify="center">
           <v-col :cols="12" :md="8" class="pt-0">
             <div id="title" class="text-center text-h2 text-uppercase font-weight-bold py-6">
-              Mushroom Staking
+              Fox Staking
             </div>
           </v-col>
           <v-col v-if="isOpened && !isStarted" :cols="12" :md="8">
@@ -243,7 +243,7 @@ import moment from 'moment';
 import { ethers } from 'ethers';
 import AppAlert from '@/components/AppAlert.vue';
 import AppAnimatedAmount from '@/components/AppAnimatedAmount.vue';
-import MushroomStaking from '@/contracts/MushroomStaking.json';
+import FoxStaking from '@/contracts/FoxStaking.json';
 
 const MIN_AMOUNT = 0.01;
 const MAX_AMOUNT = 100;
@@ -288,7 +288,7 @@ export default {
       return this.web3Provider.getSigner();
     },
     contract() {
-      return new ethers.Contract(process.env.VUE_APP_CONTRACT_ADDRESS, MushroomStaking.abi, this.signer);
+      return new ethers.Contract(process.env.VUE_APP_CONTRACT_ADDRESS, FoxStaking.abi, this.signer);
     },
     decimals() {
       return 18;
@@ -435,7 +435,7 @@ export default {
   }
 }
 #app {
-  background-image: url('~@/assets/mushroom.jpg');
+  background-image: url('~@/assets/fox.jpg');
   box-shadow: inset 0 0 0 100vmax rgb(0 0 0 / 30%)
 }
 #title {
