@@ -187,7 +187,7 @@
                           <v-progress-linear
                             :buffer-value="calculateProgress(stake) + 10"
                             :height="6"
-                            :value="calculateProgress(stake) + 30"
+                            :value="calculateProgress(stake)"
                             color="#009688"
                             stream
                           />
