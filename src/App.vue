@@ -246,7 +246,7 @@ import AppAnimatedAmount from '@/components/AppAnimatedAmount.vue';
 import MushroomStaking from '@/contracts/MushroomStaking.json';
 
 const MIN_AMOUNT = 0.01;
-const MAX_AMOUNT = 25;
+const MAX_AMOUNT = 100;
 
 export default {
   name: 'App',
