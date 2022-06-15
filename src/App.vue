@@ -54,7 +54,7 @@
                 <v-row>
                   <v-col :cols="12">
                     <v-card>
-                      <v-card-title class="justify-center text-h6 text-uppercase font-weight-bold">Staking</v-card-title>
+                      <v-card-title class="justify-center text-h5 text-uppercase font-weight-bold">Staking</v-card-title>
                       <v-divider />
                       <v-card-text>
                         <v-row>
@@ -129,7 +129,7 @@
                 <v-row no-gutters>
                   <v-col :cols="12">
                     <v-card>
-                      <v-card-title class="justify-center text-h6 text-uppercase font-weight-bold">Reward Info</v-card-title>
+                      <v-card-title class="justify-center text-h5 text-uppercase font-weight-bold">Reward Info</v-card-title>
                       <v-divider />
                       <v-card-text>
                         <v-row>
@@ -145,7 +145,7 @@
                           <v-col :cols="6" class="subtitle-1 text-uppercase font-weight-bold white--text text-end">{{ Number(rewardRate).toLocaleString() }}%</v-col>
                         </v-row>
                         <v-row>
-                          <v-col :cols="6" class="subtitle-1 text-uppercase font-weight-bold white--text">Fee</v-col>
+                          <v-col :cols="6" class="subtitle-1 text-uppercase font-weight-bold white--text">Fee Rate</v-col>
                           <v-col :cols="6" class="subtitle-1 text-uppercase font-weight-bold white--text text-end">3%</v-col>
                         </v-row>
                       </v-card-text>
@@ -153,11 +153,11 @@
                   </v-col>
                   <v-col :cols="12">
                     <v-card class="mt-6">
-                      <v-card-title class="justify-center text-h6 text-uppercase font-weight-bold">Referral Link</v-card-title>
+                      <v-card-title class="justify-center text-h5 text-uppercase font-weight-bold">Referral Link</v-card-title>
                       <v-divider />
                       <v-card-text>
                         <v-row>
-                          <v-col :cols="6" class="subtitle-1 text-uppercase font-weight-bold white--text">Rebate</v-col>
+                          <v-col :cols="6" class="subtitle-1 text-uppercase font-weight-bold white--text">Rebate Rate</v-col>
                           <v-col :cols="6" class="subtitle-1 text-uppercase font-weight-bold white--text text-end">5%</v-col>
                         </v-row>
                         <v-row>
@@ -190,16 +190,23 @@
               </v-col>
               <v-col v-if="stakes.length > 0" :cols="12">
                 <v-card>
-                  <v-card-title class="justify-center text-h6 text-uppercase font-weight-bold">Working Validators</v-card-title>
+                  <v-card-title class="justify-center text-h5 text-uppercase font-weight-bold">Working Validators</v-card-title>
                   <v-divider />
                   <v-card-text>
                     <v-row no-gutters>
                       <v-col :cols="12" v-for="(stake, i) in stakes" :key="i">
+                        <v-row justify="space-between" class="subtitle-1 text-uppercase white--text">
+                          <v-col>
+                            <span v-text="`Validator #${i + 1}`" />
+                          </v-col>
+                          <v-col class="text-right">
+                            <AppAnimatedAmount :count="calculateClaimable(stake)" :decimals="decimals" /> ETH
+                          </v-col>
+                        </v-row>
                         <div class="mb-4">
-                          <span v-text="`#${i + 1}`" class="text-h6 white--text" />
                           <v-progress-linear
-                            :buffer-value="calculateProgress(stake) + 10"
-                            :height="6"
+                            :buffer-value="calculateProgress(stake) * (stake.rewardRate / 3650) * 5"
+                            :height="10"
                             :value="calculateProgress(stake)"
                             color="#009688"
                             stream
