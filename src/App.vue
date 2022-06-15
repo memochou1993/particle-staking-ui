@@ -160,6 +160,7 @@
                           <v-col :cols="12" class="subtitle-1 text-uppercase font-weight-bold white--text">
                             <v-text-field
                               :value="referralLink"
+                              append-icon="mdi-content-copy"
                               color="#C46210"
                               dense
                               hide-details
@@ -358,6 +359,9 @@ export default {
 </script>
 
 <style lang="scss">
+.cursor-pointer {
+  cursor: pointer;
+}
 .v-application {
   font-family: 'Varela Round', sans-serif !important;
   .text-h1,
@@ -398,6 +402,10 @@ export default {
 }
 .v-btn {
   height: 42px !important;
+}
+.v-input__icon {
+  cursor: pointer;
+  padding-left: 24px;
 }
 .text-gradient {
   background: -webkit-linear-gradient(#FFFFFF, #999999);
