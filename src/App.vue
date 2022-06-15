@@ -27,21 +27,21 @@
           </v-col>
           <v-col v-if="isOpened && !isStarted" :cols="12" :md="8">
             <v-card>
-              <v-card-title class="justify-center text-h4 text-uppercase font-weight-bold">
-                Countdown to Launch!
+              <v-card-title class="justify-center text-center text-h4 text-uppercase font-weight-bold">
+                Countdown to Launch
               </v-card-title>
               <v-card-text>
                 <v-row justify="center">
-                  <v-col :cols="3" class="text-center text-h5 font-weight-bold">
+                  <v-col :cols="3" class="text-center text-h5 font-weight-bold white--text">
                     {{ remainingTime.days }} Days
                   </v-col>
-                  <v-col :cols="3" class="text-center text-h5 font-weight-bold">
+                  <v-col :cols="3" class="text-center text-h5 font-weight-bold white--text">
                     {{ remainingTime.hours }} Hours
                   </v-col>
-                  <v-col :cols="3" class="text-center text-h5 font-weight-bold">
+                  <v-col :cols="3" class="text-center text-h5 font-weight-bold white--text">
                     {{ remainingTime.minutes }} Minutes
                   </v-col>
-                  <v-col :cols="3" class="text-center text-h5 font-weight-bold">
+                  <v-col :cols="3" class="text-center text-h5 font-weight-bold white--text">
                     {{ remainingTime.seconds }} Seconds
                   </v-col>
                 </v-row>
@@ -138,7 +138,7 @@
                         </v-row>
                         <v-row>
                           <v-col :cols="6" class="subtitle-1 text-uppercase font-weight-bold white--text">Daily Return</v-col>
-                          <v-col :cols="6" class="subtitle-1 text-uppercase font-weight-bold white--text text-end">{{ Number(rewardRate / 365).toFixed(0) }}%</v-col>
+                          <v-col :cols="6" class="subtitle-1 text-uppercase font-weight-bold white--text text-end">{{ Number(rewardRate / 365).toFixed(1) }}%</v-col>
                         </v-row>
                         <v-row>
                           <v-col :cols="6" class="subtitle-1 text-uppercase font-weight-bold white--text">APR</v-col>
@@ -146,7 +146,7 @@
                         </v-row>
                         <v-row>
                           <v-col :cols="6" class="subtitle-1 text-uppercase font-weight-bold white--text">Fee</v-col>
-                          <v-col :cols="6" class="subtitle-1 text-uppercase font-weight-bold white--text text-end">2%</v-col>
+                          <v-col :cols="6" class="subtitle-1 text-uppercase font-weight-bold white--text text-end">3%</v-col>
                         </v-row>
                       </v-card-text>
                     </v-card>
@@ -157,16 +157,29 @@
                       <v-divider />
                       <v-card-text>
                         <v-row>
+                          <v-col :cols="6" class="subtitle-1 text-uppercase font-weight-bold white--text">Rebate</v-col>
+                          <v-col :cols="6" class="subtitle-1 text-uppercase font-weight-bold white--text text-end">5%</v-col>
+                        </v-row>
+                        <v-row>
+                          <v-col :cols="6" class="subtitle-1 text-uppercase font-weight-bold white--text">Rebate</v-col>
+                          <v-col :cols="6" class="subtitle-1 text-uppercase font-weight-bold white--text text-end">{{ `${stakeholder ? formatNumber(stakeholder.rebate) : 0} ETH` }}</v-col>
+                        </v-row>
+                        <v-row>
                           <v-col :cols="12" class="subtitle-1 text-uppercase font-weight-bold white--text">
                             <v-text-field
                               :value="referralLink"
+                              id="referral"
                               append-icon="mdi-content-copy"
                               color="#009688"
                               dense
                               hide-details
                               readonly
+                              ref="referral"
                               rounded
                               solo
+                              @click:append="$refs.referral.focus()"
+                              @focus="copy($event)"
+                              class="cursor-pointer"
                             />
                           </v-col>
                         </v-row>
@@ -175,7 +188,7 @@
                   </v-col>
                 </v-row>
               </v-col>
-              <v-col :cols="12">
+              <v-col v-if="stakes.length > 0" :cols="12">
                 <v-card>
                   <v-card-title class="justify-center text-h6 text-uppercase font-weight-bold">Working Validators</v-card-title>
                   <v-divider />
@@ -282,8 +295,11 @@ export default {
     claimed() {
       return this.stakes.reduce((pre, cur) => pre.add(cur.claimed), ethers.BigNumber.from(0));
     },
+    referrer() {
+      return (new URLSearchParams(window.location.search)).get('ref') || this.account;
+    },
     referralLink() {
-      return `${window.location.href}?ref=${this.account}`;
+      return this.account ? `${process.env.VUE_APP_URL}?ref=${this.account}` : '';
     },
   },
   watch: {
@@ -324,10 +340,8 @@ export default {
       this.startTime = await this.contract.startTime();
       this.stakeholder = await this.contract.stakeholders(this.account);
       this.isStakeholder = await this.contract.isStakeholder(this.account);
-      this.rewardRate = await this.contract.rewardRateOf(this.account);
-      this.stakes = this.isStakeholder
-        ? await this.contract.stakesOf(this.account)
-        : [];
+      this.rewardRate = this.isStakeholder ? await this.contract.rewardRateOf(this.account) : 3650;
+      this.stakes = this.isStakeholder ? await this.contract.stakesOf(this.account) : [];
     },
     connect() {
       this.loadAccount();
@@ -335,7 +349,7 @@ export default {
     async deposit() {
       if (!Number(this.amount)) return;
       const amount = ethers.BigNumber.from(1).mul(ethers.FixedNumber.fromString(this.amount));
-      const res = await this.contract.deposit({
+      const res = await this.contract.deposit(this.referrer, {
         value: amount,
       });
       await res.wait();
@@ -377,6 +391,10 @@ export default {
     },
     formatNumber(number = 0) {
       return Number(number / (10 ** this.decimals)).toFixed(6);
+    },
+    copy(event) {
+      event.target.select();
+      document.execCommand('copy');
     },
   },
 };
@@ -436,6 +454,11 @@ export default {
   -webkit-text-stroke: 0.5px #FFFFFF;
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
+}
+.cursor-pointer {
+  .v-text-field__slot, input {
+    cursor: pointer;
+  }
 }
 input::-webkit-outer-spin-button,
 input::-webkit-inner-spin-button {
