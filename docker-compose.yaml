@@ -2,7 +2,7 @@ version: "3"
 
 services:
   app:
-    container_name: fox-staking-ui
+    container_name: castle-staking-ui
     build: .
     restart: always
     env_file: .env

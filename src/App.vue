@@ -22,7 +22,7 @@
         <v-row justify="center">
           <v-col :cols="12" :md="8" class="pt-0">
             <div id="title" class="text-center text-h2 text-uppercase font-weight-bold py-6">
-              Fox Staking
+              Castle Staking
             </div>
           </v-col>
           <v-col v-if="isOpened && !isStarted" :cols="12" :md="8">
@@ -104,12 +104,12 @@
                         </v-row>
                         <v-row>
                           <v-col :cols="6" class="subtitle-1 text-uppercase font-weight-bold white--text">Claimable</v-col>
-                          <v-col :cols="6" class="subtitle-1 text-uppercase font-weight-bold white--text text-end"><AppAnimatedAmount :count="claimable" :decimals="decimals" /> {{ currency }}</v-col>
+                          <v-col :cols="6" class="subtitle-1 text-uppercase font-weight-bold white--text text-end"><AppAnimatedAmount :count="totalClaimable" :decimals="decimals" /> {{ currency }}</v-col>
                         </v-row>
                         <v-row>
                           <v-col :cols="12">
                             <v-btn
-                              :disabled="!account || !isOpened || !isStarted || !claimable"
+                              :disabled="!account || !isOpened || !isStarted || !totalClaimable"
                               block
                               outlined
                               rounded
@@ -190,7 +190,7 @@
               </v-col>
               <v-col v-if="stakes.length > 0" :cols="12">
                 <v-card>
-                  <v-card-title class="justify-center text-h5 text-uppercase font-weight-bold">Working Validators</v-card-title>
+                  <v-card-title class="justify-center text-h5 text-uppercase font-weight-bold">{{ isStarted ? 'Working Validators' : 'Prepared Validators' }}</v-card-title>
                   <v-divider />
                   <v-card-text>
                     <v-row no-gutters>
@@ -243,7 +243,7 @@ import moment from 'moment';
 import { ethers } from 'ethers';
 import AppAlert from '@/components/AppAlert.vue';
 import AppAnimatedAmount from '@/components/AppAnimatedAmount.vue';
-import FoxStaking from '@/contracts/FoxStaking.json';
+import CastleStaking from '@/contracts/CastleStaking.json';
 
 const MIN_AMOUNT = 0.01;
 const MAX_AMOUNT = 100;
@@ -278,7 +278,7 @@ export default {
     message: '',
     remainingTime: {},
     remainingSeconds: 0,
-    claimable: 0,
+    totalClaimable: 0,
   }),
   computed: {
     currency() {
@@ -288,7 +288,7 @@ export default {
       return this.web3Provider.getSigner();
     },
     contract() {
-      return new ethers.Contract(process.env.VUE_APP_CONTRACT_ADDRESS, FoxStaking.abi, this.signer);
+      return new ethers.Contract(process.env.VUE_APP_CONTRACT_ADDRESS, CastleStaking.abi, this.signer);
     },
     decimals() {
       return 18;
@@ -341,6 +341,7 @@ export default {
       if (this.account) await this.loadData();
       if (this.isOpened) await this.countdown();
       if (this.isOpened) this.calculateTotalClaimable();
+      this.reset();
     },
     loadWeb3Provider() {
       this.web3Provider = new ethers.providers.Web3Provider(window.ethereum);
@@ -370,12 +371,12 @@ export default {
         value: amount,
       });
       await res.wait();
-      window.location.reload();
+      this.init();
     },
     async claim() {
       const res = await this.contract.claim();
       await res.wait();
-      window.location.reload();
+      this.init();
     },
     async countdown() {
       const interval = 1000;
@@ -396,7 +397,7 @@ export default {
     calculateTotalClaimable() {
       setInterval(() => {
         if (!this.stakes || !this.isStarted) return;
-        this.claimable = this.stakes.reduce((pre, cur) => pre + this.calculateClaimable(cur), 0);
+        this.totalClaimable = this.stakes.reduce((pre, cur) => pre + this.calculateClaimable(cur), 0);
       }, 1000);
     },
     calculateClaimable(stake) {
@@ -408,6 +409,9 @@ export default {
     },
     formatNumber(number = 0) {
       return Number(number / (10 ** this.decimals)).toFixed(6);
+    },
+    reset() {
+      this.amount = '';
     },
     copy(event) {
       event.target.select();
@@ -450,13 +454,13 @@ export default {
 #connect {
   background: #000000;
   border: none !important;
-  opacity: 0.875;
+  opacity: 0.9;
 }
 .v-sheet.v-card {
   background-color: #000000 !important;
   border-radius: 16px !important;
   outline: 4px solid #C46210 !important;
-  opacity: 0.85;
+  opacity: 0.9;
 }
 .v-input, .v-btn {
   border: 3px solid #009688 !important;
