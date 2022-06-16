@@ -4,7 +4,7 @@
       <v-container fluid>
         <v-row justify="end">
           <v-btn
-            id="connect"
+            id="connect-button"
             rounded
             class="ma-5 subtitle-1 font-weight-bold"
             @click="connect"
@@ -20,28 +20,28 @@
           </v-btn>
         </v-row>
         <v-row justify="center">
-          <v-col :cols="12" :md="8" class="pt-0">
-            <div id="title" class="text-center text-h2 text-uppercase font-weight-bold py-6">
+          <v-col :cols="12" :md="8">
+            <div class="text-center text-h2 text-uppercase font-weight-black gradient-text bordered-text py-3">
               Castle Staking
             </div>
           </v-col>
           <v-col v-if="isOpened && !isStarted" :cols="12" :md="8">
             <v-card>
-              <v-card-title class="justify-center text-center text-h4 text-uppercase font-weight-bold">
+              <v-card-title class="justify-center text-center text-h4 text-uppercase font-weight-bold gradient-text">
                 Countdown to Launch
               </v-card-title>
               <v-card-text>
                 <v-row justify="center">
-                  <v-col :cols="3" class="text-center text-h5 font-weight-bold white--text">
+                  <v-col :cols="3" class="text-center text-h5 font-weight-bold gradient-text">
                     {{ remainingTime.days }} Days
                   </v-col>
-                  <v-col :cols="3" class="text-center text-h5 font-weight-bold white--text">
+                  <v-col :cols="3" class="text-center text-h5 font-weight-bold gradient-text">
                     {{ remainingTime.hours }} Hours
                   </v-col>
-                  <v-col :cols="3" class="text-center text-h5 font-weight-bold white--text">
+                  <v-col :cols="3" class="text-center text-h5 font-weight-bold gradient-text">
                     {{ remainingTime.minutes }} Minutes
                   </v-col>
-                  <v-col :cols="3" class="text-center text-h5 font-weight-bold white--text">
+                  <v-col :cols="3" class="text-center text-h5 font-weight-bold gradient-text">
                     {{ remainingTime.seconds }} Seconds
                   </v-col>
                 </v-row>
@@ -53,17 +53,17 @@
               <v-col :cols="12" :sm="6" :lg="6">
                 <v-row>
                   <v-col :cols="12">
-                    <v-card :height="574 - 24">
-                      <v-card-title class="justify-center text-h5 text-uppercase font-weight-bold">Staking</v-card-title>
+                    <v-card :height="588 - 24">
+                      <v-card-title class="justify-center text-h5 text-uppercase font-weight-bold gradient-text">Staking</v-card-title>
                       <v-divider />
                       <v-card-text>
                         <v-row>
-                          <v-col :cols="6" class="subtitle-1 text-uppercase font-weight-bold white--text">Balance</v-col>
-                          <v-col :cols="6" class="subtitle-1 text-uppercase font-weight-bold white--text text-end">{{ formatNumber(accountBalance) }} {{ currency }}</v-col>
+                          <v-col :cols="6" class="subtitle-1 text-uppercase font-weight-medium gradient-text">Balance</v-col>
+                          <v-col :cols="6" class="subtitle-1 text-uppercase font-weight-medium gradient-text text-end">{{ formatNumber(accountBalance) }} {{ currency }}</v-col>
                         </v-row>
                         <v-row>
-                          <v-col :cols="6" class="subtitle-1 text-uppercase font-weight-bold white--text">Level</v-col>
-                          <v-col :cols="6" class="subtitle-1 text-uppercase font-weight-bold white--text text-end">{{ stakeholder ? stakeholder.level : 0 }}</v-col>
+                          <v-col :cols="6" class="subtitle-1 text-uppercase font-weight-medium gradient-text">Level</v-col>
+                          <v-col :cols="6" class="subtitle-1 text-uppercase font-weight-medium gradient-text text-end">{{ stakeholder ? stakeholder.level : 0 }}</v-col>
                         </v-row>
                         <v-row>
                           <v-col :cols="6">
@@ -73,7 +73,6 @@
                               :step="0.01"
                               :suffix="currency"
                               autofocus
-                              color="#009688"
                               dense
                               hide-details
                               rounded
@@ -95,16 +94,16 @@
                           </v-col>
                         </v-row>
                         <v-row>
-                          <v-col :cols="6" class="subtitle-1 text-uppercase font-weight-bold white--text">Staked</v-col>
-                          <v-col :cols="6" class="subtitle-1 text-uppercase font-weight-bold white--text text-end">{{ formatNumber(staked) }}</v-col>
+                          <v-col :cols="6" class="subtitle-1 text-uppercase font-weight-medium gradient-text">Staked</v-col>
+                          <v-col :cols="6" class="subtitle-1 text-uppercase font-weight-medium gradient-text text-end">{{ formatNumber(staked) }}</v-col>
                         </v-row>
                         <v-row>
-                          <v-col :cols="6" class="subtitle-1 text-uppercase font-weight-bold white--text">Claimed</v-col>
-                          <v-col :cols="6" class="subtitle-1 text-uppercase font-weight-bold white--text text-end">{{ formatNumber(claimed) }} {{ currency }}</v-col>
+                          <v-col :cols="6" class="subtitle-1 text-uppercase font-weight-medium gradient-text">Claimed</v-col>
+                          <v-col :cols="6" class="subtitle-1 text-uppercase font-weight-medium gradient-text text-end">{{ formatNumber(claimed) }} {{ currency }}</v-col>
                         </v-row>
                         <v-row>
-                          <v-col :cols="6" class="subtitle-1 text-uppercase font-weight-bold white--text">Claimable</v-col>
-                          <v-col :cols="6" class="subtitle-1 text-uppercase font-weight-bold white--text text-end"><AppAnimatedAmount :count="totalClaimable" :decimals="decimals" /> {{ currency }}</v-col>
+                          <v-col :cols="6" class="subtitle-1 text-uppercase font-weight-medium gradient-text">Claimable</v-col>
+                          <v-col :cols="6" class="subtitle-1 text-uppercase font-weight-medium gradient-text text-end"><AppAnimatedAmount :count="totalClaimable" :decimals="decimals" /> {{ currency }}</v-col>
                         </v-row>
                         <v-row>
                           <v-col :cols="12">
@@ -129,55 +128,54 @@
                 <v-row no-gutters>
                   <v-col :cols="12">
                     <v-card>
-                      <v-card-title class="justify-center text-h5 text-uppercase font-weight-bold">Reward Info</v-card-title>
+                      <v-card-title class="justify-center text-h5 text-uppercase font-weight-bold gradient-text">Reward Info</v-card-title>
                       <v-divider />
                       <v-card-text>
                         <v-row>
-                          <v-col :cols="6" class="subtitle-1 text-uppercase font-weight-bold white--text">Total Staked</v-col>
-                          <v-col :cols="6" class="subtitle-1 text-uppercase font-weight-bold white--text text-end">{{ formatNumber(contractBalance) }} {{ currency }}</v-col>
+                          <v-col :cols="6" class="subtitle-1 text-uppercase font-weight-medium gradient-text">Total Staked</v-col>
+                          <v-col :cols="6" class="subtitle-1 text-uppercase font-weight-medium gradient-text text-end">{{ formatNumber(contractBalance) }} {{ currency }}</v-col>
                         </v-row>
                         <v-row>
-                          <v-col :cols="6" class="subtitle-1 text-uppercase font-weight-bold white--text">Daily Return</v-col>
-                          <v-col :cols="6" class="subtitle-1 text-uppercase font-weight-bold white--text text-end">{{ Number(rewardRate / 365).toFixed(1) }}%</v-col>
+                          <v-col :cols="6" class="subtitle-1 text-uppercase font-weight-medium gradient-text">Daily Return</v-col>
+                          <v-col :cols="6" class="subtitle-1 text-uppercase font-weight-medium gradient-text text-end">{{ Number(rewardRate / 365).toFixed(1) }}%</v-col>
                         </v-row>
                         <v-row>
-                          <v-col :cols="6" class="subtitle-1 text-uppercase font-weight-bold white--text">APR</v-col>
-                          <v-col :cols="6" class="subtitle-1 text-uppercase font-weight-bold white--text text-end">{{ Number(rewardRate).toLocaleString() }}%</v-col>
+                          <v-col :cols="6" class="subtitle-1 text-uppercase font-weight-medium gradient-text">APR</v-col>
+                          <v-col :cols="6" class="subtitle-1 text-uppercase font-weight-medium gradient-text text-end">{{ Number(rewardRate).toLocaleString() }}%</v-col>
                         </v-row>
                         <v-row>
-                          <v-col :cols="6" class="subtitle-1 text-uppercase font-weight-bold white--text">Fee Rate</v-col>
-                          <v-col :cols="6" class="subtitle-1 text-uppercase font-weight-bold white--text text-end">3%</v-col>
+                          <v-col :cols="6" class="subtitle-1 text-uppercase font-weight-medium gradient-text">Fee Rate</v-col>
+                          <v-col :cols="6" class="subtitle-1 text-uppercase font-weight-medium gradient-text text-end">3%</v-col>
                         </v-row>
                       </v-card-text>
                     </v-card>
                   </v-col>
                   <v-col :cols="12">
                     <v-card class="mt-6">
-                      <v-card-title class="justify-center text-h5 text-uppercase font-weight-bold">Referral Link</v-card-title>
+                      <v-card-title class="justify-center text-h5 text-uppercase font-weight-bold gradient-text">Referral Link</v-card-title>
                       <v-divider />
                       <v-card-text>
                         <v-row>
-                          <v-col :cols="6" class="subtitle-1 text-uppercase font-weight-bold white--text">Rebate Rate</v-col>
-                          <v-col :cols="6" class="subtitle-1 text-uppercase font-weight-bold white--text text-end">5%</v-col>
+                          <v-col :cols="6" class="subtitle-1 text-uppercase font-weight-medium gradient-text">Rebate Rate</v-col>
+                          <v-col :cols="6" class="subtitle-1 text-uppercase font-weight-medium gradient-text text-end">5%</v-col>
                         </v-row>
                         <v-row>
-                          <v-col :cols="6" class="subtitle-1 text-uppercase font-weight-bold white--text">Rebate</v-col>
-                          <v-col :cols="6" class="subtitle-1 text-uppercase font-weight-bold white--text text-end">{{ `${stakeholder ? formatNumber(stakeholder.rebate) : 0} ETH` }}</v-col>
+                          <v-col :cols="6" class="subtitle-1 text-uppercase font-weight-medium gradient-text">Rebate</v-col>
+                          <v-col :cols="6" class="subtitle-1 text-uppercase font-weight-medium gradient-text text-end">{{ `${stakeholder ? formatNumber(stakeholder.rebate) : 0} ETH` }}</v-col>
                         </v-row>
                         <v-row>
-                          <v-col :cols="12" class="subtitle-1 text-uppercase font-weight-bold white--text">
+                          <v-col :cols="12" class="subtitle-1 text-uppercase font-weight-bold">
                             <v-text-field
                               :value="referralLink"
-                              id="referral"
+                              id="referral-link"
                               append-icon="mdi-content-copy"
-                              color="#009688"
                               dense
                               hide-details
                               readonly
-                              ref="referral"
+                              ref="referralLink"
                               rounded
                               solo
-                              @click:append="$refs.referral.focus()"
+                              @click:append="$refs.referralLink.focus()"
                               @focus="copy($event)"
                               class="cursor-pointer"
                             />
@@ -190,12 +188,12 @@
               </v-col>
               <v-col v-if="stakes.length > 0" :cols="12">
                 <v-card>
-                  <v-card-title class="justify-center text-h5 text-uppercase font-weight-bold">{{ isStarted ? 'Working Validators' : 'Prepared Validators' }}</v-card-title>
+                  <v-card-title class="justify-center text-h5 text-uppercase font-weight-bold gradient-text">{{ isStarted ? 'Working Validators' : 'Prepared Validators' }}</v-card-title>
                   <v-divider />
                   <v-card-text>
                     <v-row no-gutters>
                       <v-col :cols="12" v-for="(stake, i) in stakes" :key="i">
-                        <v-row justify="space-between" class="subtitle-1 text-uppercase white--text">
+                        <v-row justify="space-between" class="subtitle-1 text-uppercase font-weight-medium gradient-text">
                           <v-col>
                             <span v-text="`Validator #${i + 1}`" />
                           </v-col>
@@ -207,10 +205,9 @@
                         </v-row>
                         <div class="mb-4">
                           <v-progress-linear
-                            :buffer-value="calculateProgress(stake) * (stake.rewardRate / defaultAPR) * 5"
+                            :buffer-value="calculateProgress(stake) * (stake.rewardRate / defaultAPR) * 1.5"
                             :height="10"
                             :value="calculateClaimable(stake) > 0 ? calculateProgress(stake) : 0"
-                            color="#009688"
                             stream
                           />
                         </div>
@@ -228,9 +225,8 @@
           </v-col>
           <AppAlert
             v-if="message"
-            :color="message.success ? 'success' : 'error'"
             :text="message.text"
-            @onClose="setMessage(null)"
+            @onClose="message = null"
           />
         </v-row>
       </v-container>
@@ -239,8 +235,8 @@
 </template>
 
 <script>
-import moment from 'moment';
 import { ethers } from 'ethers';
+import moment from 'moment';
 import AppAlert from '@/components/AppAlert.vue';
 import AppAnimatedAmount from '@/components/AppAnimatedAmount.vue';
 import CastleStaking from '@/contracts/CastleStaking.json';
@@ -275,7 +271,7 @@ export default {
     /**
      * display data
      */
-    message: '',
+    message: null,
     remainingTime: {},
     remainingSeconds: 0,
     totalClaimable: 0,
@@ -365,18 +361,30 @@ export default {
       this.loadAccount();
     },
     async deposit() {
-      if (!Number(this.amount)) return;
-      const amount = ethers.BigNumber.from(1).mul(ethers.FixedNumber.fromString(this.amount));
-      const res = await this.contract.deposit(this.referrer, {
-        value: amount,
-      });
-      await res.wait();
-      this.init();
+      try {
+        if (!Number(this.amount)) return;
+        const amount = ethers.BigNumber.from(1).mul(ethers.FixedNumber.fromString(this.amount));
+        const res = await this.contract.deposit(this.referrer, {
+          value: amount,
+        });
+        await res.wait();
+        this.init();
+        this.message = { text: 'Staked Successfully!' };
+      } catch (e) {
+        if (e.reason) this.message = { text: e.reason };
+        if (e.message) this.message = { text: e.message };
+      }
     },
     async claim() {
-      const res = await this.contract.claim();
-      await res.wait();
-      this.init();
+      try {
+        const res = await this.contract.claim();
+        await res.wait();
+        this.init();
+        this.message = { text: 'Cliamed Successfully!' };
+      } catch (e) {
+        if (e.reason) this.message = { text: e.reason };
+        if (e.message) this.message = { text: e.message };
+      }
     },
     async countdown() {
       const interval = 1000;
@@ -422,69 +430,55 @@ export default {
 </script>
 
 <style lang="scss">
-.cursor-pointer {
-  cursor: pointer;
-}
-.v-application {
-  font-family: 'Varela Round', sans-serif !important;
-  .text-h1,
-  .text-h2,
-  .text-h3,
-  .text-h4,
-  .text-h5,
-  .text-h6,
-  .subtitle-1,
-  .subtitle-2 {
-    font-family: 'Varela Round', sans-serif !important;
-  }
-}
 #app {
   background-image: url('~@/assets/castle.jpg');
   background-position: center;
   background-repeat: no-repeat;
   background-size: cover;
+  box-shadow: inset 0 0 0 100vmax rgb(0 0 0 / 25%);
 }
-#title {
-  font-family: "Roboto", sans-serif !important;
-  background: -webkit-linear-gradient(#C46210, #FFFFFF);
-  -webkit-text-stroke: 2px #000000;
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
+#connect-button {
+  background: black;
+  opacity: 0.8;
 }
-#connect {
-  background: #000000;
-  border: none !important;
-  opacity: 0.9;
+#referral-link {
+  font-weight: normal;
 }
-.v-sheet.v-card {
-  background-color: #000000 !important;
-  border-radius: 16px !important;
-  outline: 4px solid #C46210 !important;
-  opacity: 0.9;
+.bordered-text {
+  -webkit-text-stroke: 1px black;
 }
-.v-input, .v-btn {
-  border: 3px solid #009688 !important;
-}
-.v-btn {
-  height: 42px !important;
-}
-.v-input__icon {
-  cursor: pointer;
-  padding-left: 24px;
-}
-.text-gradient {
-  background: -webkit-linear-gradient(#FFFFFF, #999999);
-  -webkit-text-stroke: 0.5px #FFFFFF;
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
+.gradient-text, .v-text-field__suffix, .v-btn__content, .v-icon {
+  background: -webkit-linear-gradient(cyan, pink) !important;
+  -webkit-background-clip: text !important;
+  -webkit-text-fill-color: transparent !important;
 }
 .cursor-pointer {
-  .v-text-field__slot, input {
+  cursor: pointer;
+  .v-text-field__slot, .v-input__icon, input {
     cursor: pointer;
   }
 }
 input::-webkit-outer-spin-button,
 input::-webkit-inner-spin-button {
   -webkit-appearance: none;
+}
+.v-sheet.v-card {
+  background-clip: content-box, border-box;
+  background-color: black !important;
+  background-image: linear-gradient(black, black), radial-gradient(circle at top left, pink,cyan);
+  background-origin: border-box;
+  border: 4px solid transparent;
+  border-radius: 16px !important;
+  opacity: 0.8;
+}
+.v-input, .v-btn {
+  background: black;
+  border: 2px solid pink !important;
+}
+.v-btn {
+  height: 42px !important;
+}
+.v-input__icon {
+  padding-left: 24px;
 }
 </style>
