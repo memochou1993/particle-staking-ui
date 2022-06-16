@@ -48,6 +48,29 @@
               </v-card-text>
             </v-card>
           </v-col>
+          <v-col v-else :cols="12" :md="8">
+            <v-card>
+              <v-card-title class="justify-center text-center text-h4 text-uppercase font-weight-bold gradient-text">
+                Running
+              </v-card-title>
+              <v-card-text>
+                <v-row justify="center">
+                  <v-col :cols="3" class="text-center text-h5 font-weight-bold gradient-text">
+                    {{ -remainingTime.days - 1 }} Days
+                  </v-col>
+                  <v-col :cols="3" class="text-center text-h5 font-weight-bold gradient-text">
+                    {{ -remainingTime.hours }} Hours
+                  </v-col>
+                  <v-col :cols="3" class="text-center text-h5 font-weight-bold gradient-text">
+                    {{ -remainingTime.minutes }} Minutes
+                  </v-col>
+                  <v-col :cols="3" class="text-center text-h5 font-weight-bold gradient-text">
+                    {{ -remainingTime.seconds }} Seconds
+                  </v-col>
+                </v-row>
+              </v-card-text>
+            </v-card>
+          </v-col>
           <v-col :cols="12" :md="8">
             <v-row>
               <v-col :cols="12" :sm="6" :lg="6">
@@ -401,7 +424,7 @@ export default {
       const interval = 1000;
       const unit = 'milliseconds';
       let duration = moment.duration((Number(this.startTime) - +new Date() / 1000) * 1000, unit);
-      const timer = setInterval(() => {
+      setInterval(() => {
         duration = moment.duration(duration - interval, unit);
         this.remainingTime = {
           days: Math.floor(duration.asDays()),
@@ -410,7 +433,6 @@ export default {
           seconds: duration.seconds(),
         };
         this.remainingSeconds = Math.floor(duration.asSeconds());
-        if (this.isStarted) clearInterval(timer);
       }, interval);
     },
     calculateTotalClaimable() {
