@@ -435,8 +435,10 @@ export default {
   }
 }
 #app {
-  background-image: url('~@/assets/fox.jpg');
-  box-shadow: inset 0 0 0 100vmax rgb(0 0 0 / 30%)
+  background-image: url('~@/assets/castle.jpg');
+  background-position: center;
+  background-repeat: no-repeat;
+  background-size: cover;
 }
 #title {
   font-family: "Roboto", sans-serif !important;
