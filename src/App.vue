@@ -161,7 +161,7 @@
                         </v-row>
                         <v-row>
                           <v-col :cols="6" class="subtitle-1 text-uppercase font-weight-medium gradient-text">Rebate</v-col>
-                          <v-col :cols="6" class="subtitle-1 text-uppercase font-weight-medium gradient-text text-end">{{ `${stakeholder ? formatNumber(stakeholder.rebate) : 0} ETH` }}</v-col>
+                          <v-col :cols="6" class="subtitle-1 text-uppercase font-weight-medium gradient-text text-end">{{ `${stakeholder ? formatNumber(stakeholder.rebate) : 0}` }} {{ currency }}</v-col>
                         </v-row>
                         <v-row>
                           <v-col :cols="12" class="subtitle-1 text-uppercase font-weight-bold">
@@ -199,7 +199,7 @@
                           </v-col>
                           <v-col class="text-right">
                             <template v-if="calculateClaimable(stake) > 0">
-                              <AppAnimatedAmount :count="calculateClaimable(stake)" :decimals="decimals" /> ETH
+                              <AppAnimatedAmount :count="calculateClaimable(stake)" :decimals="decimals" /> {{ currency }}
                             </template>
                           </v-col>
                         </v-row>
@@ -208,6 +208,7 @@
                             :buffer-value="calculateProgress(stake) * (stake.rewardRate / defaultAPR) * 1.5"
                             :height="10"
                             :value="calculateClaimable(stake) > 0 ? calculateProgress(stake) : 0"
+                            color="pink"
                             stream
                           />
                         </div>
@@ -442,7 +443,7 @@ export default {
   opacity: 0.8;
 }
 #referral-link {
-  font-weight: normal;
+  font-weight: 500;
 }
 .bordered-text {
   -webkit-text-stroke: 1px black;
@@ -480,5 +481,8 @@ input::-webkit-inner-spin-button {
 }
 .v-input__icon {
   padding-left: 24px;
+}
+.v-text-field__suffix {
+  font-weight: 500 !important;
 }
 </style>
