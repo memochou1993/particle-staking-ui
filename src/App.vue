@@ -372,8 +372,13 @@ export default {
         this.init();
         this.message = { text: 'Staked Successfully!' };
       } catch (e) {
-        if (e.reason) this.message = { text: e.reason };
-        if (e.message) this.message = { text: e.message };
+        if (e?.data?.message) {
+          this.message = { text: e.data.message.substring(e.data.message.indexOf('CastleStaking')) };
+          return;
+        }
+        if (e?.message) {
+          this.message = { text: e.message };
+        }
       }
     },
     async claim() {
@@ -383,8 +388,13 @@ export default {
         this.init();
         this.message = { text: 'Cliamed Successfully!' };
       } catch (e) {
-        if (e.reason) this.message = { text: e.reason };
-        if (e.message) this.message = { text: e.message };
+        if (e?.data?.message) {
+          this.message = { text: e.data.message.substring(e.data.message.indexOf('CastleStaking')) };
+          return;
+        }
+        if (e?.message) {
+          this.message = { text: e.message };
+        }
       }
     },
     async countdown() {
@@ -475,6 +485,9 @@ input::-webkit-inner-spin-button {
 .v-input, .v-btn {
   background: black;
   border: 2px solid pink !important;
+}
+.theme--dark.v-btn.v-btn--disabled {
+  border: 2px solid grey !important;
 }
 .v-btn {
   height: 42px !important;
