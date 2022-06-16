@@ -58,7 +58,7 @@
                       <v-divider />
                       <v-card-text>
                         <v-row>
-                          <v-col :cols="6" class="subtitle-1 text-uppercase font-weight-bold white--text">Wallet</v-col>
+                          <v-col :cols="6" class="subtitle-1 text-uppercase font-weight-bold white--text">Balance</v-col>
                           <v-col :cols="6" class="subtitle-1 text-uppercase font-weight-bold white--text text-end">{{ formatNumber(accountBalance) }} {{ currency }}</v-col>
                         </v-row>
                         <v-row>
@@ -95,7 +95,7 @@
                           </v-col>
                         </v-row>
                         <v-row>
-                          <v-col :cols="6" class="subtitle-1 text-uppercase font-weight-bold white--text">Total Staked</v-col>
+                          <v-col :cols="6" class="subtitle-1 text-uppercase font-weight-bold white--text">Staked</v-col>
                           <v-col :cols="6" class="subtitle-1 text-uppercase font-weight-bold white--text text-end">{{ formatNumber(staked) }}</v-col>
                         </v-row>
                         <v-row>
@@ -133,7 +133,7 @@
                       <v-divider />
                       <v-card-text>
                         <v-row>
-                          <v-col :cols="6" class="subtitle-1 text-uppercase font-weight-bold white--text">Contract</v-col>
+                          <v-col :cols="6" class="subtitle-1 text-uppercase font-weight-bold white--text">Total Staked</v-col>
                           <v-col :cols="6" class="subtitle-1 text-uppercase font-weight-bold white--text text-end">{{ formatNumber(contractBalance) }} {{ currency }}</v-col>
                         </v-row>
                         <v-row>
