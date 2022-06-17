@@ -25,22 +25,13 @@
               Castle Staking
             </div>
           </v-col>
-          <v-col v-if="isOpened" :cols="12" :md="8">
+          <v-col :cols="12" :md="8">
             <AppCountdownTimer
-              v-if="!isStarted"
-              text="Countdown to Launch"
-              :days="remainingTime.days || 0"
-              :hours="remainingTime.hours || 0"
-              :minutes="remainingTime.minutes || 0"
-              :seconds="remainingTime.seconds || 0"
-            />
-            <AppCountdownTimer
-              v-else
-              text="Running"
-              :days="-remainingTime.days - 1 || 0"
-              :hours="-remainingTime.hours || 0"
-              :minutes="-remainingTime.minutes || 0"
-              :seconds="-remainingTime.seconds || 0"
+              :text="timerStatus"
+              :days="!isStarted ? remainingTime.days : -remainingTime.days - 1 || 0"
+              :hours="!isStarted ? remainingTime.hours : -remainingTime.hours || 0"
+              :minutes="!isStarted ? remainingTime.minutes : -remainingTime.minutes || 0"
+              :seconds="!isStarted ? remainingTime.seconds : -remainingTime.seconds || 0"
             />
           </v-col>
           <v-col :cols="12" :md="8">
@@ -314,6 +305,11 @@ export default {
     },
     referralLink() {
       return this.account ? `${process.env.VUE_APP_URL}?ref=${this.account}` : '';
+    },
+    timerStatus() {
+      if (!this.isOpened) return 'Preparing';
+      if (!this.isStarted) return 'Countdown to Launch';
+      return 'Running';
     },
   },
   watch: {

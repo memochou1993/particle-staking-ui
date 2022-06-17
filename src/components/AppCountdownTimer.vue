@@ -32,19 +32,19 @@ export default {
     },
     days: {
       type: Number,
-      required: true,
+      default: 0,
     },
     hours: {
       type: Number,
-      required: true,
+      default: 0,
     },
     minutes: {
       type: Number,
-      required: true,
+      default: 0,
     },
     seconds: {
       type: Number,
-      required: true,
+      default: 0,
     },
   },
 };
