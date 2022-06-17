@@ -39,17 +39,17 @@
               <v-col :cols="12" :sm="6" :lg="6">
                 <v-row>
                   <v-col :cols="12">
-                    <v-card :height="640 - 24">
+                    <v-card :height="588 - 24">
                       <v-card-title class="justify-center text-h5 text-uppercase font-weight-bold gradient-text">Staking</v-card-title>
                       <v-divider />
                       <v-card-text>
                         <v-row>
-                          <v-col :cols="6" class="subtitle-1 text-uppercase font-weight-medium gradient-text">Balance</v-col>
-                          <v-col :cols="6" class="subtitle-1 text-uppercase font-weight-medium gradient-text text-end">{{ formatNumber(accountBalance) }} {{ currency }}</v-col>
+                          <v-col :cols="6" class="subtitle-1 text-uppercase font-weight-medium gradient-text">Contract</v-col>
+                          <v-col :cols="6" class="subtitle-1 text-uppercase font-weight-medium gradient-text text-end">{{ formatNumber(contractBalance) }} {{ currency }}</v-col>
                         </v-row>
                         <v-row>
-                          <v-col :cols="6" class="subtitle-1 text-uppercase font-weight-medium gradient-text">Validators</v-col>
-                          <v-col :cols="6" class="subtitle-1 text-uppercase font-weight-medium gradient-text text-end">{{ stakeholder ? stakeholder.level : 0 }}</v-col>
+                          <v-col :cols="6" class="subtitle-1 text-uppercase font-weight-medium gradient-text">Wallet</v-col>
+                          <v-col :cols="6" class="subtitle-1 text-uppercase font-weight-medium gradient-text text-end">{{ formatNumber(accountBalance) }} {{ currency }}</v-col>
                         </v-row>
                         <v-row>
                           <v-col :cols="6">
@@ -80,8 +80,12 @@
                           </v-col>
                         </v-row>
                         <v-row>
+                          <v-col :cols="6" class="subtitle-1 text-uppercase font-weight-medium gradient-text">Validators</v-col>
+                          <v-col :cols="6" class="subtitle-1 text-uppercase font-weight-medium gradient-text text-end">{{ stakeholder ? stakeholder.level : 0 }}</v-col>
+                        </v-row>
+                        <v-row>
                           <v-col :cols="6" class="subtitle-1 text-uppercase font-weight-medium gradient-text">Staked</v-col>
-                          <v-col :cols="6" class="subtitle-1 text-uppercase font-weight-medium gradient-text text-end">{{ formatNumber(staked) }}</v-col>
+                          <v-col :cols="6" class="subtitle-1 text-uppercase font-weight-medium gradient-text text-end">{{ formatNumber(staked) }} {{ currency }}</v-col>
                         </v-row>
                         <v-row>
                           <v-col :cols="6" class="subtitle-1 text-uppercase font-weight-medium gradient-text">Claimed</v-col>
@@ -117,10 +121,6 @@
                       <v-card-title class="justify-center text-h5 text-uppercase font-weight-bold gradient-text">Reward Info</v-card-title>
                       <v-divider />
                       <v-card-text>
-                        <v-row>
-                          <v-col :cols="6" class="subtitle-1 text-uppercase font-weight-medium gradient-text">Total Staked</v-col>
-                          <v-col :cols="6" class="subtitle-1 text-uppercase font-weight-medium gradient-text text-end">{{ formatNumber(contractBalance) }} {{ currency }}</v-col>
-                        </v-row>
                         <v-row>
                           <v-col :cols="6" class="subtitle-1 text-uppercase font-weight-medium gradient-text">Daily Return</v-col>
                           <v-col :cols="6" class="subtitle-1 text-uppercase font-weight-medium gradient-text text-end">{{ Number(rewardRate / 365).toFixed(1) }}%</v-col>
@@ -438,15 +438,11 @@ export default {
 
 <style lang="scss">
 #app {
-  background-image: url('~@/assets/castle.jpg');
-  background-position: center;
-  background-repeat: no-repeat;
-  background-size: cover;
-  box-shadow: inset 0 0 0 100vmax rgb(0 0 0 / 25%);
+  background-image: url('~@/assets/particle.jpg');
 }
 #connect-button {
   background: black;
-  opacity: 0.8;
+  opacity: 0.725;
 }
 #referral-link {
   font-weight: 500;
@@ -471,12 +467,12 @@ input::-webkit-inner-spin-button {
 }
 .v-sheet.v-card {
   background-clip: content-box, border-box;
-  background-color: black !important;
+  background-color: black;
   background-image: linear-gradient(black, black), radial-gradient(circle at top left, pink,cyan);
   background-origin: border-box;
   border: 4px solid transparent;
   border-radius: 16px !important;
-  opacity: 0.8;
+  opacity: 0.725;
 }
 .v-input, .v-btn {
   background: black;
@@ -489,7 +485,7 @@ input::-webkit-inner-spin-button {
   height: 42px !important;
 }
 .v-input__icon {
-  padding-left: 24px;
+  padding-left: 12px;
 }
 .v-text-field__suffix {
   font-weight: 500 !important;
