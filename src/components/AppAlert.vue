@@ -13,6 +13,7 @@
 
 <script>
 export default {
+  name: 'AppAlert',
   props: {
     text: {
       type: String,

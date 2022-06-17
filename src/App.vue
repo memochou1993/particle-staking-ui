@@ -25,58 +25,30 @@
               Castle Staking
             </div>
           </v-col>
-          <v-col v-if="isOpened && !isStarted" :cols="12" :md="8">
-            <v-card>
-              <v-card-title class="justify-center text-center text-h4 text-uppercase font-weight-bold gradient-text">
-                Countdown to Launch
-              </v-card-title>
-              <v-card-text>
-                <v-row justify="center">
-                  <v-col :cols="3" class="text-center text-h5 font-weight-bold gradient-text">
-                    {{ remainingTime.days }} Days
-                  </v-col>
-                  <v-col :cols="3" class="text-center text-h5 font-weight-bold gradient-text">
-                    {{ remainingTime.hours }} Hours
-                  </v-col>
-                  <v-col :cols="3" class="text-center text-h5 font-weight-bold gradient-text">
-                    {{ remainingTime.minutes }} Minutes
-                  </v-col>
-                  <v-col :cols="3" class="text-center text-h5 font-weight-bold gradient-text">
-                    {{ remainingTime.seconds }} Seconds
-                  </v-col>
-                </v-row>
-              </v-card-text>
-            </v-card>
-          </v-col>
-          <v-col v-else :cols="12" :md="8">
-            <v-card>
-              <v-card-title class="justify-center text-center text-h4 text-uppercase font-weight-bold gradient-text">
-                Running
-              </v-card-title>
-              <v-card-text>
-                <v-row justify="center">
-                  <v-col :cols="3" class="text-center text-h5 font-weight-bold gradient-text">
-                    {{ -remainingTime.days - 1 }} Days
-                  </v-col>
-                  <v-col :cols="3" class="text-center text-h5 font-weight-bold gradient-text">
-                    {{ -remainingTime.hours }} Hours
-                  </v-col>
-                  <v-col :cols="3" class="text-center text-h5 font-weight-bold gradient-text">
-                    {{ -remainingTime.minutes }} Minutes
-                  </v-col>
-                  <v-col :cols="3" class="text-center text-h5 font-weight-bold gradient-text">
-                    {{ -remainingTime.seconds }} Seconds
-                  </v-col>
-                </v-row>
-              </v-card-text>
-            </v-card>
+          <v-col v-if="isOpened" :cols="12" :md="8">
+            <AppCountdownTimer
+              v-if="!isStarted"
+              text="Countdown to Launch"
+              :days="remainingTime.days || 0"
+              :hours="remainingTime.hours || 0"
+              :minutes="remainingTime.minutes || 0"
+              :seconds="remainingTime.seconds || 0"
+            />
+            <AppCountdownTimer
+              v-else
+              text="Running"
+              :days="-remainingTime.days - 1 || 0"
+              :hours="-remainingTime.hours || 0"
+              :minutes="-remainingTime.minutes || 0"
+              :seconds="-remainingTime.seconds || 0"
+            />
           </v-col>
           <v-col :cols="12" :md="8">
             <v-row>
               <v-col :cols="12" :sm="6" :lg="6">
                 <v-row>
                   <v-col :cols="12">
-                    <v-card :height="588 - 24">
+                    <v-card :height="640 - 24">
                       <v-card-title class="justify-center text-h5 text-uppercase font-weight-bold gradient-text">Staking</v-card-title>
                       <v-divider />
                       <v-card-text>
@@ -85,7 +57,7 @@
                           <v-col :cols="6" class="subtitle-1 text-uppercase font-weight-medium gradient-text text-end">{{ formatNumber(accountBalance) }} {{ currency }}</v-col>
                         </v-row>
                         <v-row>
-                          <v-col :cols="6" class="subtitle-1 text-uppercase font-weight-medium gradient-text">Level</v-col>
+                          <v-col :cols="6" class="subtitle-1 text-uppercase font-weight-medium gradient-text">Validators</v-col>
                           <v-col :cols="6" class="subtitle-1 text-uppercase font-weight-medium gradient-text text-end">{{ stakeholder ? stakeholder.level : 0 }}</v-col>
                         </v-row>
                         <v-row>
@@ -183,6 +155,10 @@
                           <v-col :cols="6" class="subtitle-1 text-uppercase font-weight-medium gradient-text text-end">5%</v-col>
                         </v-row>
                         <v-row>
+                          <v-col :cols="6" class="subtitle-1 text-uppercase font-weight-medium gradient-text">Invitees</v-col>
+                          <v-col :cols="6" class="subtitle-1 text-uppercase font-weight-medium gradient-text text-end">{{ Number(stakeholder ? stakeholder.inviteeCount : 0).toLocaleString() }}</v-col>
+                        </v-row>
+                        <v-row>
                           <v-col :cols="6" class="subtitle-1 text-uppercase font-weight-medium gradient-text">Rebate</v-col>
                           <v-col :cols="6" class="subtitle-1 text-uppercase font-weight-medium gradient-text text-end">{{ `${stakeholder ? formatNumber(stakeholder.rebate) : 0}` }} {{ currency }}</v-col>
                         </v-row>
@@ -261,9 +237,10 @@
 <script>
 import { ethers } from 'ethers';
 import moment from 'moment';
+import CastleStaking from '@/contracts/CastleStaking.json';
 import AppAlert from '@/components/AppAlert.vue';
 import AppAnimatedAmount from '@/components/AppAnimatedAmount.vue';
-import CastleStaking from '@/contracts/CastleStaking.json';
+import AppCountdownTimer from '@/components/AppCountdownTimer.vue';
 
 const MIN_AMOUNT = 0.01;
 const MAX_AMOUNT = 100;
@@ -273,6 +250,7 @@ export default {
   components: {
     AppAlert,
     AppAnimatedAmount,
+    AppCountdownTimer,
   },
   data: () => ({
     /**
