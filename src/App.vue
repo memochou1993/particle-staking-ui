@@ -182,7 +182,7 @@
                   <v-divider />
                   <v-card-text>
                     <v-row no-gutters>
-                      <v-col :cols="12" v-for="(stake, i) in [...stakes].reverse()" :key="i">
+                      <v-col :cols="12" v-for="(stake, i) in [...stakes].reverse()" :key="stakes.length - i">
                         <v-row justify="space-between" class="subtitle-1 text-uppercase font-weight-medium gradient-text">
                           <v-col class="text-left">
                             <span v-text="`Validator #${stakes.length - i}`" />
@@ -501,5 +501,12 @@ input::-webkit-inner-spin-button {
 }
 .v-text-field__suffix {
   font-weight: 500 !important;
+}
+.v-card__text {
+  max-height: 600px;
+  overflow: scroll;
+  &::-webkit-scrollbar {
+    display: none;
+  }
 }
 </style>
