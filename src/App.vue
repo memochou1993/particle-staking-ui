@@ -320,6 +320,7 @@ export default {
       return `${process.env.VUE_APP_URL}?ref=${this.account || ''}`;
     },
     timerStatus() {
+      if (this.startTime === null) return '';
       if (!this.isOpened) return 'Preparing';
       if (!this.isStarted) return 'Countdown to Launch';
       return 'Running';

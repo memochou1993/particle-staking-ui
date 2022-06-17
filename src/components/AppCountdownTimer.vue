@@ -1,6 +1,6 @@
 <template>
   <v-card>
-    <v-card-title class="justify-center text-center text-h4 text-uppercase font-weight-bold gradient-text">
+    <v-card-title style="height: 72px;" class="justify-center text-center text-h4 text-uppercase font-weight-bold gradient-text">
       {{ text }}
     </v-card-title>
     <v-card-text>
