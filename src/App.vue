@@ -191,6 +191,9 @@
                             <template v-if="calculateClaimable(stake) > 0">
                               <AppAnimatedAmount :count="calculateClaimable(stake)" :decimals="decimals" /> {{ currency }}
                             </template>
+                            <template v-else>
+                              0 {{ currency }}
+                            </template>
                           </v-col>
                         </v-row>
                         <div class="mb-4">
@@ -260,7 +263,6 @@ export default {
     startTime: null,
     stakeholder: null,
     isStakeholder: null,
-    rewardRate: null,
     stakes: [],
     /**
      * form data
@@ -277,7 +279,7 @@ export default {
   }),
   computed: {
     currency() {
-      return 'ETH';
+      return process.env.VUE_APP_CURRENCY;
     },
     signer() {
       return this.web3Provider.getSigner();
@@ -305,6 +307,10 @@ export default {
     },
     claimed() {
       return this.stakes.reduce((pre, cur) => pre.add(cur.claimed), ethers.BigNumber.from(0));
+    },
+    rewardRate() {
+      if (this.stakes.length > 0) return this.stakes[this.stakes.length - 1].rewardRate;
+      return this.defaultAPR;
     },
     referrer() {
       return (new URLSearchParams(window.location.search)).get('ref') || this.account;
@@ -358,7 +364,6 @@ export default {
       this.startTime = await this.contract.startTime();
       this.stakeholder = await this.contract.stakeholders(this.account);
       this.isStakeholder = await this.contract.isStakeholder(this.account);
-      this.rewardRate = this.isStakeholder ? await this.contract.rewardRateOf(this.account) : this.defaultAPR;
       this.stakes = this.isStakeholder ? await this.contract.stakesOf(this.account) : [];
     },
     connect() {
