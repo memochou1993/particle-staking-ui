@@ -335,7 +335,7 @@ export default {
   },
   created() {
     if (!window.ethereum) {
-      console.log('Please connect to Metamask.');
+      this.message = { text: 'MetaMask is not installed' };
       return;
     }
     this.init();
