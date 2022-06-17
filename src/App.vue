@@ -22,7 +22,7 @@
         <v-row justify="center">
           <v-col :cols="12" :md="8">
             <div class="text-center text-h2 text-uppercase font-weight-black gradient-text bordered-text py-3">
-              Castle Staking
+              Particle Staking
             </div>
           </v-col>
           <v-col :cols="12" :md="8">
@@ -52,6 +52,10 @@
                           <v-col :cols="6" class="subtitle-1 text-uppercase font-weight-medium gradient-text text-end">{{ formatNumber(accountBalance) }} {{ currency }}</v-col>
                         </v-row>
                         <v-row>
+                          <v-col :cols="6" class="subtitle-1 text-uppercase font-weight-medium gradient-text">Validators</v-col>
+                          <v-col :cols="6" class="subtitle-1 text-uppercase font-weight-medium gradient-text text-end">{{ stakeholder ? stakeholder.level : 0 }}</v-col>
+                        </v-row>
+                        <v-row>
                           <v-col :cols="6">
                             <v-text-field
                               v-model="amount"
@@ -78,10 +82,6 @@
                               Stake
                             </v-btn>
                           </v-col>
-                        </v-row>
-                        <v-row>
-                          <v-col :cols="6" class="subtitle-1 text-uppercase font-weight-medium gradient-text">Validators</v-col>
-                          <v-col :cols="6" class="subtitle-1 text-uppercase font-weight-medium gradient-text text-end">{{ stakeholder ? stakeholder.level : 0 }}</v-col>
                         </v-row>
                         <v-row>
                           <v-col :cols="6" class="subtitle-1 text-uppercase font-weight-medium gradient-text">Staked</v-col>
@@ -228,7 +228,7 @@
 <script>
 import { ethers } from 'ethers';
 import moment from 'moment';
-import CastleStaking from '@/contracts/CastleStaking.json';
+import ParticleStaking from '@/contracts/ParticleStaking.json';
 import AppAlert from '@/components/AppAlert.vue';
 import AppAnimatedAmount from '@/components/AppAnimatedAmount.vue';
 import AppCountdownTimer from '@/components/AppCountdownTimer.vue';
@@ -277,7 +277,7 @@ export default {
       return this.web3Provider.getSigner();
     },
     contract() {
-      return new ethers.Contract(process.env.VUE_APP_CONTRACT_ADDRESS, CastleStaking.abi, this.signer);
+      return new ethers.Contract(process.env.VUE_APP_CONTRACT_ADDRESS, ParticleStaking.abi, this.signer);
     },
     decimals() {
       return 18;
@@ -370,7 +370,7 @@ export default {
         this.message = { text: 'Staked Successfully!' };
       } catch (e) {
         if (e?.data?.message) {
-          this.message = { text: e.data.message.substring(e.data.message.indexOf('CastleStaking')) };
+          this.message = { text: e.data.message.substring(e.data.message.indexOf('ParticleStaking')) };
           return;
         }
         if (e?.message) {
@@ -386,7 +386,7 @@ export default {
         this.message = { text: 'Cliamed Successfully!' };
       } catch (e) {
         if (e?.data?.message) {
-          this.message = { text: e.data.message.substring(e.data.message.indexOf('CastleStaking')) };
+          this.message = { text: e.data.message.substring(e.data.message.indexOf('ParticleStaking')) };
           return;
         }
         if (e?.message) {
