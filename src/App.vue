@@ -182,10 +182,10 @@
                   <v-divider />
                   <v-card-text>
                     <v-row no-gutters>
-                      <v-col :cols="12" v-for="(stake, i) in stakes" :key="i">
+                      <v-col :cols="12" v-for="(stake, i) in [...stakes].reverse()" :key="i">
                         <v-row justify="space-between" class="subtitle-1 text-uppercase font-weight-medium gradient-text">
-                          <v-col>
-                            <span v-text="`Validator #${i + 1}`" />
+                          <v-col class="text-left">
+                            <span v-text="`Validator #${stakes.length - i}`" />
                           </v-col>
                           <v-col class="text-right">
                             <template v-if="calculateClaimable(stake) > 0">
@@ -201,6 +201,11 @@
                             color="pink"
                             stream
                           />
+                          <v-row justify="space-between">
+                            <v-col class="text-right">
+                              <div class="caption text-uppercase grey--text">APR: {{ Number(stake.rewardRate).toLocaleString() }}%</div>
+                            </v-col>
+                          </v-row>
                         </div>
                       </v-col>
                     </v-row>
@@ -265,6 +270,7 @@ export default {
      * display data
      */
     message: null,
+    timer: null,
     remainingTime: {},
     remainingSeconds: 0,
     totalClaimable: 0,
@@ -304,7 +310,7 @@ export default {
       return (new URLSearchParams(window.location.search)).get('ref') || this.account;
     },
     referralLink() {
-      return this.account ? `${process.env.VUE_APP_URL}?ref=${this.account}` : '';
+      return `${process.env.VUE_APP_URL}?ref=${this.account || ''}`;
     },
     timerStatus() {
       if (!this.isOpened) return 'Preparing';
@@ -395,10 +401,11 @@ export default {
       }
     },
     async countdown() {
+      clearInterval(this.timer);
       const interval = 1000;
       const unit = 'milliseconds';
       let duration = moment.duration((Number(this.startTime) - +new Date() / 1000) * 1000, unit);
-      setInterval(() => {
+      this.timer = setInterval(() => {
         duration = moment.duration(duration - interval, unit);
         this.remainingTime = {
           days: Math.floor(duration.asDays()),
