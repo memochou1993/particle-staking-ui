@@ -62,6 +62,7 @@
                               :readonly="!account || !isOpened"
                               :step="0.01"
                               :suffix="currency"
+                              ref="amount"
                               autofocus
                               dense
                               hide-details
@@ -379,6 +380,7 @@ export default {
         await res.wait();
         this.init();
         this.message = { text: 'Staked Successfully!' };
+        this.$refs.amount.focus();
       } catch (e) {
         if (e?.data?.message) {
           this.message = { text: e.data.message.substring(e.data.message.indexOf('ParticleStaking')) };
