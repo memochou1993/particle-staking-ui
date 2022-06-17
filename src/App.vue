@@ -53,7 +53,7 @@
                         </v-row>
                         <v-row>
                           <v-col :cols="6" class="subtitle-1 text-uppercase font-weight-medium gradient-text">Validators</v-col>
-                          <v-col :cols="6" class="subtitle-1 text-uppercase font-weight-medium gradient-text text-end">{{ stakeholder ? stakeholder.level : 0 }}</v-col>
+                          <v-col :cols="6" class="subtitle-1 text-uppercase font-weight-medium gradient-text text-end">{{ stakes.length }}</v-col>
                         </v-row>
                         <v-row>
                           <v-col :cols="6">

@@ -1,6 +1,7 @@
 <template>
   <v-snackbar
     :value="true"
+    color="pink"
     text
     @input="$emit('onClose')"
   >
