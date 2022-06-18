@@ -186,7 +186,7 @@
                       <v-col :cols="12" v-for="(stake, i) in [...stakes].reverse()" :key="stakes.length - i">
                         <v-row justify="space-between" class="subtitle-1 text-uppercase font-weight-medium gradient-text">
                           <v-col class="text-left">
-                            <span v-text="`Validator #${stakes.length - i}`" />
+                            <span>{{ `Validator #${stakes.length - i}` }}</span>
                           </v-col>
                           <v-col class="text-right">
                             <template v-if="calculateClaimable(stake) > 0">
@@ -199,13 +199,15 @@
                         </v-row>
                         <div class="mb-4">
                           <v-progress-linear
-                            :buffer-value="calculateProgress(stake) * (stake.rewardRate / defaultAPR) * 1.5"
-                            :height="10"
-                            :value="calculateClaimable(stake) > 0 ? calculateProgress(stake) : 0"
                             color="pink"
-                            stream
+                            indeterminate
                           />
                           <v-row justify="space-between">
+                            <v-col class="text-left">
+                              <div class="caption text-uppercase grey--text">
+                                Validating: <span class="caption text-uppercase grey--text">{{ displayHash(i) }}</span>
+                              </div>
+                            </v-col>
                             <v-col class="text-right">
                               <div class="caption text-uppercase grey--text">APR: {{ Number(stake.rewardRate).toLocaleString() }}%</div>
                             </v-col>
@@ -242,6 +244,7 @@
 
 <script>
 import { ethers } from 'ethers';
+import Hashes from 'jshashes';
 import moment from 'moment';
 import ParticleStaking from '@/contracts/ParticleStaking.json';
 import AppAlert from '@/components/AppAlert.vue';
@@ -279,7 +282,9 @@ export default {
      * display data
      */
     message: null,
-    timer: null,
+    hashTimer: null,
+    countdownTimer: null,
+    currencyTime: 0,
     remainingTime: {},
     remainingSeconds: 0,
     totalClaimable: 0,
@@ -355,6 +360,7 @@ export default {
       if (this.account) await this.loadData();
       if (this.isOpened) await this.countdown();
       if (this.isOpened) this.calculateTotalClaimable();
+      if (this.isStarted) this.updateTime();
       this.reset();
     },
     loadWeb3Provider() {
@@ -415,11 +421,11 @@ export default {
       }
     },
     async countdown() {
-      clearInterval(this.timer);
+      clearInterval(this.countdownTimer);
       const interval = 1000;
       const unit = 'milliseconds';
       let duration = moment.duration((Number(this.startTime) - +new Date() / 1000) * 1000, unit);
-      this.timer = setInterval(() => {
+      this.countdownTimer = setInterval(() => {
         duration = moment.duration(duration - interval, unit);
         this.remainingTime = {
           days: Math.floor(duration.asDays()),
@@ -430,6 +436,16 @@ export default {
         this.remainingSeconds = Math.floor(duration.asSeconds());
       }, interval);
     },
+    updateTime() {
+      clearInterval(this.hashTimer);
+      this.hashTimer = setInterval(() => {
+        this.currencyTime += 100;
+      }, 100);
+    },
+    displayHash(i) {
+      const hash = (new Hashes.SHA1()).hex(`${this.currencyTime} - ${i}`);
+      return `${hash.substring(0, 12)}...${hash.substring(hash.length - 12)}`;
+    },
     calculateTotalClaimable() {
       setInterval(() => {
         if (!this.stakes || !this.isStarted) return;
@@ -439,9 +455,6 @@ export default {
     calculateClaimable(stake) {
       const { amount, rewardRate, lastClaimDate } = stake;
       return (((Math.floor(+new Date() / 1000) - Number(lastClaimDate)) * Number(amount)) * Number(rewardRate)) / 100 / 365 / 86400;
-    },
-    calculateProgress(stake) {
-      return (((Math.floor(+new Date() / 1000) - stake.lastClaimDate) / 86400) % 1) * 100;
     },
     formatNumber(number = 0) {
       return Number(number / (10 ** this.decimals)).toFixed(6);
