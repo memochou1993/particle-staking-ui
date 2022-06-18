@@ -2,11 +2,32 @@
   <v-app>
     <v-main>
       <v-container fluid>
-        <v-row justify="end">
+        <v-row justify="space-between">
+          <v-menu offset-y>
+            <template v-slot:activator="{ on, attrs }">
+              <v-btn
+                v-bind="attrs"
+                v-on="on"
+                rounded
+                class="dark-button subtitle-1 font-weight-bold ma-5"
+              >
+                {{ $t('language') }}
+              </v-btn>
+            </template>
+            <v-list>
+              <v-list-item
+                v-for="(lang, i) in languages"
+                :key="i"
+                dense
+                @click="() => selectLanguage(lang.locale)"
+              >
+                <v-list-item-title>{{ lang.text }}</v-list-item-title>
+              </v-list-item>
+            </v-list>
+          </v-menu>
           <v-btn
-            id="connect-button"
             rounded
-            class="ma-5 subtitle-1 font-weight-bold"
+            class="dark-button subtitle-1 font-weight-bold ma-5"
             @click="connect"
           >
             <span
@@ -22,7 +43,7 @@
         <v-row justify="center">
           <v-col :cols="12" :md="8">
             <div class="text-center text-h2 text-uppercase font-weight-black gradient-text bordered-text py-3">
-              Particle Staking
+              {{ $t('title') }}
             </div>
           </v-col>
           <v-col :cols="12" :md="8">
@@ -40,19 +61,19 @@
                 <v-row>
                   <v-col :cols="12">
                     <v-card :height="588 - 24">
-                      <v-card-title class="justify-center text-h5 text-uppercase font-weight-bold gradient-text">Staking</v-card-title>
+                      <v-card-title class="justify-center text-h5 text-uppercase font-weight-bold gradient-text">{{ $t('staking') }}</v-card-title>
                       <v-divider />
                       <v-card-text>
                         <v-row>
-                          <v-col :cols="6" class="subtitle-1 text-uppercase font-weight-medium gradient-text">Contract</v-col>
+                          <v-col :cols="6" class="subtitle-1 text-uppercase font-weight-medium gradient-text">{{ $t('contract') }}</v-col>
                           <v-col :cols="6" class="subtitle-1 text-uppercase font-weight-medium gradient-text text-end">{{ formatNumber(contractBalance) }} {{ currency }}</v-col>
                         </v-row>
                         <v-row>
-                          <v-col :cols="6" class="subtitle-1 text-uppercase font-weight-medium gradient-text">Wallet</v-col>
+                          <v-col :cols="6" class="subtitle-1 text-uppercase font-weight-medium gradient-text">{{ $t('wallet') }}</v-col>
                           <v-col :cols="6" class="subtitle-1 text-uppercase font-weight-medium gradient-text text-end">{{ formatNumber(accountBalance) }} {{ currency }}</v-col>
                         </v-row>
                         <v-row>
-                          <v-col :cols="6" class="subtitle-1 text-uppercase font-weight-medium gradient-text">Validators</v-col>
+                          <v-col :cols="6" class="subtitle-1 text-uppercase font-weight-medium gradient-text">{{ $t('validators') }}</v-col>
                           <v-col :cols="6" class="subtitle-1 text-uppercase font-weight-medium gradient-text text-end">{{ stakes.length }}</v-col>
                         </v-row>
                         <v-row>
@@ -80,20 +101,20 @@
                               class="subtitle-1 font-weight-bold"
                               @click="deposit"
                             >
-                              Stake
+                              {{ $t('buttonStake') }}
                             </v-btn>
                           </v-col>
                         </v-row>
                         <v-row>
-                          <v-col :cols="6" class="subtitle-1 text-uppercase font-weight-medium gradient-text">Staked</v-col>
+                          <v-col :cols="6" class="subtitle-1 text-uppercase font-weight-medium gradient-text">{{ $t('staked') }}</v-col>
                           <v-col :cols="6" class="subtitle-1 text-uppercase font-weight-medium gradient-text text-end">{{ formatNumber(staked) }} {{ currency }}</v-col>
                         </v-row>
                         <v-row>
-                          <v-col :cols="6" class="subtitle-1 text-uppercase font-weight-medium gradient-text">Claimed</v-col>
+                          <v-col :cols="6" class="subtitle-1 text-uppercase font-weight-medium gradient-text">{{ $t('claimed') }}</v-col>
                           <v-col :cols="6" class="subtitle-1 text-uppercase font-weight-medium gradient-text text-end">{{ formatNumber(claimed) }} {{ currency }}</v-col>
                         </v-row>
                         <v-row>
-                          <v-col :cols="6" class="subtitle-1 text-uppercase font-weight-medium gradient-text">Claimable</v-col>
+                          <v-col :cols="6" class="subtitle-1 text-uppercase font-weight-medium gradient-text">{{ $t('claimable') }}</v-col>
                           <v-col :cols="6" class="subtitle-1 text-uppercase font-weight-medium gradient-text text-end"><AppAnimatedAmount :count="totalClaimable" :decimals="decimals" /> {{ currency }}</v-col>
                         </v-row>
                         <v-row>
@@ -106,7 +127,7 @@
                               class="subtitle-1 font-weight-bold"
                               @click="claim"
                             >
-                              Claim
+                              {{ $t('buttonClaim') }}
                             </v-btn>
                           </v-col>
                         </v-row>
@@ -119,19 +140,19 @@
                 <v-row no-gutters>
                   <v-col :cols="12">
                     <v-card>
-                      <v-card-title class="justify-center text-h5 text-uppercase font-weight-bold gradient-text">Reward Info</v-card-title>
+                      <v-card-title class="justify-center text-h5 text-uppercase font-weight-bold gradient-text">{{ $t('rewardInfo') }}</v-card-title>
                       <v-divider />
                       <v-card-text>
                         <v-row>
-                          <v-col :cols="6" class="subtitle-1 text-uppercase font-weight-medium gradient-text">Daily Return</v-col>
+                          <v-col :cols="6" class="subtitle-1 text-uppercase font-weight-medium gradient-text">{{ $t('dailyReturn') }}</v-col>
                           <v-col :cols="6" class="subtitle-1 text-uppercase font-weight-medium gradient-text text-end">{{ Number(rewardRate / 365).toFixed(1) }}%</v-col>
                         </v-row>
                         <v-row>
-                          <v-col :cols="6" class="subtitle-1 text-uppercase font-weight-medium gradient-text">APR</v-col>
+                          <v-col :cols="6" class="subtitle-1 text-uppercase font-weight-medium gradient-text">{{ $t('APR') }}</v-col>
                           <v-col :cols="6" class="subtitle-1 text-uppercase font-weight-medium gradient-text text-end">{{ Number(rewardRate).toLocaleString() }}%</v-col>
                         </v-row>
                         <v-row>
-                          <v-col :cols="6" class="subtitle-1 text-uppercase font-weight-medium gradient-text">Fee Rate</v-col>
+                          <v-col :cols="6" class="subtitle-1 text-uppercase font-weight-medium gradient-text">{{ $t('feeRate') }}</v-col>
                           <v-col :cols="6" class="subtitle-1 text-uppercase font-weight-medium gradient-text text-end">3%</v-col>
                         </v-row>
                       </v-card-text>
@@ -139,19 +160,19 @@
                   </v-col>
                   <v-col :cols="12">
                     <v-card class="mt-6">
-                      <v-card-title class="justify-center text-h5 text-uppercase font-weight-bold gradient-text">Referral Link</v-card-title>
+                      <v-card-title class="justify-center text-h5 text-uppercase font-weight-bold gradient-text">{{ $t('referralLink') }}</v-card-title>
                       <v-divider />
                       <v-card-text>
                         <v-row>
-                          <v-col :cols="6" class="subtitle-1 text-uppercase font-weight-medium gradient-text">Rebate Rate</v-col>
+                          <v-col :cols="6" class="subtitle-1 text-uppercase font-weight-medium gradient-text">{{ $t('rebateRate') }}</v-col>
                           <v-col :cols="6" class="subtitle-1 text-uppercase font-weight-medium gradient-text text-end">5%</v-col>
                         </v-row>
                         <v-row>
-                          <v-col :cols="6" class="subtitle-1 text-uppercase font-weight-medium gradient-text">Invitees</v-col>
+                          <v-col :cols="6" class="subtitle-1 text-uppercase font-weight-medium gradient-text">{{ $t('invitees') }}</v-col>
                           <v-col :cols="6" class="subtitle-1 text-uppercase font-weight-medium gradient-text text-end">{{ Number(stakeholder ? stakeholder.inviteeCount : 0).toLocaleString() }}</v-col>
                         </v-row>
                         <v-row>
-                          <v-col :cols="6" class="subtitle-1 text-uppercase font-weight-medium gradient-text">Rebate</v-col>
+                          <v-col :cols="6" class="subtitle-1 text-uppercase font-weight-medium gradient-text">{{ $t('rebate') }}</v-col>
                           <v-col :cols="6" class="subtitle-1 text-uppercase font-weight-medium gradient-text text-end">{{ `${stakeholder ? formatNumber(stakeholder.rebate) : 0}` }} {{ currency }}</v-col>
                         </v-row>
                         <v-row>
@@ -179,14 +200,14 @@
               </v-col>
               <v-col v-if="stakes.length > 0" :cols="12">
                 <v-card>
-                  <v-card-title class="justify-center text-h5 text-uppercase font-weight-bold gradient-text">{{ isStarted ? 'Working Validators' : 'Prepared Validators' }}</v-card-title>
+                  <v-card-title class="justify-center text-h5 text-uppercase font-weight-bold gradient-text">{{ isStarted ? $t('workingValidators') : $t('preparedValidators') }}</v-card-title>
                   <v-divider />
                   <v-card-text>
                     <v-row no-gutters>
                       <v-col :cols="12" v-for="(stake, i) in [...stakes].reverse()" :key="stakes.length - i">
                         <v-row justify="space-between" class="subtitle-1 text-uppercase font-weight-medium gradient-text">
                           <v-col class="text-left">
-                            <span>{{ `Validator #${stakes.length - i}` }}</span>
+                            <span>{{ `${$t('validator')} #${stakes.length - i}` }}</span>
                           </v-col>
                           <v-col class="text-right">
                             <template v-if="calculateClaimable(stake) > 0">
@@ -205,11 +226,11 @@
                           <v-row justify="space-between">
                             <v-col class="text-left">
                               <div class="caption text-uppercase grey--text">
-                                Validating: <span class="caption text-uppercase grey--text">{{ displayHash(i) }}</span>
+                                {{ $t('validating') }}: <span class="caption text-uppercase grey--text">{{ displayHash(i) }}</span>
                               </div>
                             </v-col>
                             <v-col class="text-right">
-                              <div class="caption text-uppercase grey--text">APR: {{ Number(stake.rewardRate).toLocaleString() }}%</div>
+                              <div class="caption text-uppercase grey--text">{{ $t('APR') }}: {{ Number(stake.rewardRate).toLocaleString() }}%</div>
                             </v-col>
                           </v-row>
                         </div>
@@ -288,6 +309,18 @@ export default {
     remainingTime: {},
     remainingSeconds: 0,
     totalClaimable: 0,
+    languages: [
+      {
+        locale: 'en',
+        text: 'English',
+      }, {
+        locale: 'zhTW',
+        text: '繁體中文',
+      }, {
+        locale: 'zhCN',
+        text: '简体中文',
+      },
+    ],
   }),
   computed: {
     currency() {
@@ -332,9 +365,9 @@ export default {
     },
     timerStatus() {
       if (this.startTime === null) return '';
-      if (!this.isOpened) return 'Preparing';
-      if (!this.isStarted) return 'Countdown to Launch';
-      return 'Running';
+      if (!this.isOpened) return this.$t('preparing');
+      if (!this.isStarted) return this.$t('countdown');
+      return this.$t('running');
     },
   },
   watch: {
@@ -379,6 +412,10 @@ export default {
       this.stakeholder = await this.contract.stakeholders(this.account);
       this.isStakeholder = await this.contract.isStakeholder(this.account);
       this.stakes = this.isStakeholder ? await this.contract.stakesOf(this.account) : [];
+    },
+    selectLanguage(locale) {
+      this.$i18n.locale = locale;
+      localStorage.setItem('locale', locale);
     },
     connect() {
       this.loadAccount();
@@ -474,12 +511,12 @@ export default {
 #app {
   background-image: url('~@/assets/particle.jpg');
 }
-#connect-button {
-  background: black;
-  opacity: 0.725;
-}
 #referral-link {
   font-weight: 500;
+}
+.dark-button {
+  background: black;
+  opacity: 0.725;
 }
 .bordered-text {
   -webkit-text-stroke: 1px black;
@@ -506,6 +543,9 @@ input::-webkit-inner-spin-button {
   background-origin: border-box;
   border: 4px solid transparent;
   border-radius: 16px !important;
+  opacity: 0.725;
+}
+.v-sheet.v-list {
   opacity: 0.725;
 }
 .v-input, .v-btn {

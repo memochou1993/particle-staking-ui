@@ -6,16 +6,16 @@
     <v-card-text>
       <v-row justify="center">
         <v-col :cols="3" class="text-center text-h5 font-weight-bold gradient-text">
-          {{ days }} Days
+          {{ days }} {{ $t('days') }}
         </v-col>
         <v-col :cols="3" class="text-center text-h5 font-weight-bold gradient-text">
-          {{ hours }} Hours
+          {{ hours }} {{ $t('hours') }}
         </v-col>
         <v-col :cols="3" class="text-center text-h5 font-weight-bold gradient-text">
-          {{ minutes }} Minutes
+          {{ minutes }} {{ $t('minutes') }}
         </v-col>
         <v-col :cols="3" class="text-center text-h5 font-weight-bold gradient-text">
-          {{ seconds }} Seconds
+          {{ seconds }} {{ $t('seconds') }}
         </v-col>
       </v-row>
     </v-card-text>
