@@ -182,18 +182,6 @@
                             <v-col :cols="6" class="subtitle-1 text-uppercase font-weight-medium gradient-text text-end">5%</v-col>
                           </v-row>
                           <v-row>
-                            <v-col :cols="6" class="subtitle-1 text-uppercase font-weight-medium gradient-text">{{ $t('invitees') }}</v-col>
-                            <v-col :cols="6" class="subtitle-1 text-uppercase font-weight-medium gradient-text text-end">{{ Number(stakeholder ? stakeholder.inviteeCount : 0).toLocaleString() }}</v-col>
-                          </v-row>
-                          <v-row>
-                            <v-col :cols="6" class="subtitle-1 text-uppercase font-weight-medium gradient-text">{{ $t('rebateClaimed') }}</v-col>
-                            <v-col :cols="6" class="subtitle-1 text-uppercase font-weight-medium gradient-text text-end">{{ `${stakeholder ? formatNumber(stakeholder.rebate.claimed) : 0}` }} {{ currency }}</v-col>
-                          </v-row>
-                          <v-row>
-                            <v-col :cols="6" class="subtitle-1 text-uppercase font-weight-medium gradient-text">{{ $t('rebateClaimable') }}</v-col>
-                            <v-col :cols="6" class="subtitle-1 text-uppercase font-weight-medium gradient-text text-end">{{ `${stakeholder ? formatNumber(stakeholder.rebate.amount) : 0}` }} {{ currency }}</v-col>
-                          </v-row>
-                          <v-row>
                             <v-col :cols="12" class="subtitle-1 text-uppercase font-weight-bold">
                               <v-text-field
                                 :value="referralLink"
@@ -210,6 +198,18 @@
                                 class="cursor-pointer"
                               />
                             </v-col>
+                          </v-row>
+                          <v-row>
+                            <v-col :cols="6" class="subtitle-1 text-uppercase font-weight-medium gradient-text">{{ $t('invitees') }}</v-col>
+                            <v-col :cols="6" class="subtitle-1 text-uppercase font-weight-medium gradient-text text-end">{{ Number(stakeholder ? stakeholder.inviteeCount : 0).toLocaleString() }}</v-col>
+                          </v-row>
+                          <v-row>
+                            <v-col :cols="6" class="subtitle-1 text-uppercase font-weight-medium gradient-text">{{ $t('rebateClaimed') }}</v-col>
+                            <v-col :cols="6" class="subtitle-1 text-uppercase font-weight-medium gradient-text text-end">{{ `${stakeholder ? formatNumber(stakeholder.rebate.claimed) : 0}` }} {{ currency }}</v-col>
+                          </v-row>
+                          <v-row>
+                            <v-col :cols="6" class="subtitle-1 text-uppercase font-weight-medium gradient-text">{{ $t('rebateClaimable') }}</v-col>
+                            <v-col :cols="6" class="subtitle-1 text-uppercase font-weight-medium gradient-text text-end">{{ `${stakeholder ? formatNumber(stakeholder.rebate.amount) : 0}` }} {{ currency }}</v-col>
                           </v-row>
                         </v-card-text>
                       </v-card>
