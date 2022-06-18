@@ -34,19 +34,13 @@
         <p>
           {{ $t('whitepaperT4P1') }}
         </p>
-        <h2>
-          {{ $t('whitepaperT5') }}
-        </h2>
-        <p>
-          {{ $t('whitepaperT5P1') }}
-        </p>
         <v-simple-table>
           <template v-slot:default>
             <thead>
               <tr>
-                <th :width="200" class="subtitle-1 text-center">{{ $t('whitepaperValidatorCount') }}</th>
-                <th class="subtitle-1 text-center">{{ $t('dailyReturn') }}</th>
-                <th class="subtitle-1 text-center">{{ $t('APR') }}</th>
+                <th :width="200" class="subtitle-1 text-center">{{ $t('validatorCount') }}</th>
+                <th :width="200" class="subtitle-1 text-center">{{ $t('dailyReturn') }}</th>
+                <th :width="200" class="subtitle-1 text-center">{{ $t('APR') }}</th>
               </tr>
             </thead>
             <tbody>
@@ -93,6 +87,6 @@ a {
   padding: 48px;
 }
 .v-card__text {
-  max-height: 1360px;
+  max-height: 1440px;
 }
 </style>

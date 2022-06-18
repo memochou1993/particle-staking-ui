@@ -2,7 +2,7 @@
   <v-app>
     <v-main>
       <v-container fluid>
-        <v-row justify="space-between" :class="['mt-10', $vuetify.breakpoint.xsOnly ? 'px-0' : 'px-10']">
+        <v-row justify="space-between" :class="['mt-10', $vuetify.breakpoint.xsOnly ? 'px-2' : 'px-10']">
           <div>
             <v-btn
               rounded
