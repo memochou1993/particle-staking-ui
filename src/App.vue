@@ -219,8 +219,14 @@
             </v-row>
           </v-col>
           <v-col :cols="12">
-            <div class="font-weight-bold text-center my-6">
-              <span v-text="'White Paper'" class="cursor-pointer"/>
+            <div class="d-flex align-center justify-center subtitle-1 font-weight-bold my-6">
+              <span v-text="'White Paper'" class="cursor-pointer mx-3"/>
+              <span class="grey--text">|</span>
+              <img src="./assets/bscscan.png" width="32px" class="mx-3" />
+              <span class="grey--text">|</span>
+              <img src="./assets/telegram.png" width="32px" class="mx-3" />
+              <span class="grey--text">|</span>
+              <img src="./assets/twitter.png" width="32px" class="mx-3" />
             </div>
           </v-col>
           <AppAlert
