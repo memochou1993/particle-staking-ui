@@ -54,7 +54,7 @@
               <v-col :cols="12" :sm="6" :lg="6">
                 <v-row>
                   <v-col :cols="12">
-                    <v-card :height="588 - 24">
+                    <v-card :height="640 - 24">
                       <v-card-title class="justify-center text-h5 text-uppercase font-weight-bold gradient-text">{{ $t('staking') }}</v-card-title>
                       <v-divider />
                       <v-card-text>
@@ -168,8 +168,12 @@
                           <v-col :cols="6" class="subtitle-1 text-uppercase font-weight-medium gradient-text text-end">{{ Number(stakeholder ? stakeholder.inviteeCount : 0).toLocaleString() }}</v-col>
                         </v-row>
                         <v-row>
-                          <v-col :cols="6" class="subtitle-1 text-uppercase font-weight-medium gradient-text">{{ $t('rebate') }}</v-col>
-                          <v-col :cols="6" class="subtitle-1 text-uppercase font-weight-medium gradient-text text-end">{{ `${stakeholder ? formatNumber(stakeholder.rebate) : 0}` }} {{ currency }}</v-col>
+                          <v-col :cols="6" class="subtitle-1 text-uppercase font-weight-medium gradient-text">{{ $t('rebateClaimed') }}</v-col>
+                          <v-col :cols="6" class="subtitle-1 text-uppercase font-weight-medium gradient-text text-end">{{ `${stakeholder ? formatNumber(stakeholder.rebate.claimed) : 0}` }} {{ currency }}</v-col>
+                        </v-row>
+                        <v-row>
+                          <v-col :cols="6" class="subtitle-1 text-uppercase font-weight-medium gradient-text">{{ $t('rebateClaimable') }}</v-col>
+                          <v-col :cols="6" class="subtitle-1 text-uppercase font-weight-medium gradient-text text-end">{{ `${stakeholder ? formatNumber(stakeholder.rebate.amount) : 0}` }} {{ currency }}</v-col>
                         </v-row>
                         <v-row>
                           <v-col :cols="12" class="subtitle-1 text-uppercase font-weight-bold">
@@ -217,7 +221,7 @@
                         <div class="mb-4">
                           <v-progress-linear
                             color="pink"
-                            indeterminate
+                            :indeterminate="isStarted"
                           />
                           <v-row justify="space-between">
                             <v-col class="text-left">
@@ -493,8 +497,8 @@ export default {
       }, 1000);
     },
     calculateClaimable(stake) {
-      const { amount, rewardRate, lastClaimDate } = stake;
-      return (((Math.floor(+new Date() / 1000) - Number(lastClaimDate)) * Number(amount)) * Number(rewardRate)) / 100 / 365 / 86400;
+      const { amount, rewardRate, claimed, createdAt } = stake;
+      return (((Math.floor(+new Date() / 1000) - Number(createdAt)) * Number(amount)) * Number(rewardRate)) / 100 / 365 / 86400 - claimed;
     },
     formatNumber(number = 0) {
       return Number(number / (10 ** this.decimals)).toFixed(6);
