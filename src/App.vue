@@ -89,6 +89,7 @@
                           <v-col :cols="6">
                             <v-btn
                               :disabled="!account || !isOpened"
+                              :loading="loading === 'deposit'"
                               block
                               outlined
                               rounded
@@ -115,6 +116,7 @@
                           <v-col :cols="12">
                             <v-btn
                               :disabled="!account || !isOpened || !isStarted || !totalClaimable"
+                              :loading="loading === 'claim'"
                               block
                               outlined
                               rounded
@@ -315,6 +317,7 @@ export default {
         text: '简体中文',
       },
     ],
+    loading: '',
   }),
   computed: {
     currency() {
@@ -415,6 +418,7 @@ export default {
       this.loadAccount();
     },
     async deposit() {
+      this.loading = 'deposit';
       try {
         if (!Number(this.amount)) return;
         const amount = ethers.BigNumber.from(1).mul(ethers.FixedNumber.fromString(this.amount));
@@ -433,9 +437,12 @@ export default {
         if (e?.message) {
           this.message = { text: e.message };
         }
+      } finally {
+        this.loading = '';
       }
     },
     async claim() {
+      this.loading = 'claim';
       try {
         const res = await this.contract.claim();
         await res.wait();
@@ -449,6 +456,8 @@ export default {
         if (e?.message) {
           this.message = { text: e.message };
         }
+      } finally {
+        this.loading = '';
       }
     },
     async countdown() {
