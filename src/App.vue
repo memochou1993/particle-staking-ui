@@ -375,8 +375,8 @@ export default {
     amount(after) {
       if (Number(after) === 0) return;
       this.$nextTick(() => {
-        if (Number(after) < MIN_AMOUNT) this.amount = MIN_AMOUNT;
-        if (Number(after) > MAX_AMOUNT) this.amount = MAX_AMOUNT;
+        if (Number(after) < MIN_AMOUNT) this.amount = String(MIN_AMOUNT);
+        if (Number(after) > MAX_AMOUNT) this.amount = String(MAX_AMOUNT);
       });
     },
   },
