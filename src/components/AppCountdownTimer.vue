@@ -3,6 +3,7 @@
     <v-card-title style="height: 72px;" class="justify-center text-center text-h4 text-uppercase font-weight-bold gradient-text">
       {{ text }}
     </v-card-title>
+    <v-divider />
     <v-card-text>
       <v-row justify="center">
         <v-col :cols="3" class="text-center text-h5 font-weight-bold gradient-text">

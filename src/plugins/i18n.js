@@ -38,6 +38,8 @@ const messages = {
     buttonClaim: 'Claim',
     messageStaked: 'Staked Successfully!',
     messageClaimed: 'Cliamed Successfully!',
+    whitePaper: 'White Paper',
+    whitepaperP1: 'TODO',
   },
   zhTW: {
     language: '語言',
@@ -73,6 +75,8 @@ const messages = {
     buttonClaim: '領取利息',
     messageStaked: '質押成功！',
     messageClaimed: '領取成功！',
+    whitePaper: '白皮書',
+    whitepaperP1: '粒子質押（Particle Staking）是一個基於權益證明（PoS）的質押平台，藉由將資金存入智能合約，以支援區塊鏈網路的安全性和營運。粒子質押會在區塊鏈節點中建立驗證者（Validator），以驗證區塊鏈上的交易。',
   },
   zhCN: {
     language: '语言',
@@ -108,6 +112,8 @@ const messages = {
     buttonClaim: '领取利息',
     messageStaked: '质押成功！',
     messageClaimed: '领取成功！',
+    whitePaper: '白皮书',
+    whitepaperP1: 'TODO',
   },
 };
 
