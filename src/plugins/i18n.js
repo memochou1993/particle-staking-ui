@@ -36,6 +36,8 @@ const messages = {
     seconds: 'Seconds',
     buttonStake: 'Stake',
     buttonClaim: 'Claim',
+    messageStaked: 'Staked Successfully!',
+    messageClaimed: 'Cliamed Successfully!',
   },
   zhTW: {
     language: '語言',
@@ -69,6 +71,8 @@ const messages = {
     seconds: '秒',
     buttonStake: '質押',
     buttonClaim: '領取利息',
+    messageStaked: '質押成功！',
+    messageClaimed: '領取成功！',
   },
   zhCN: {
     language: '语言',
@@ -102,6 +106,8 @@ const messages = {
     seconds: '秒',
     buttonStake: '质押',
     buttonClaim: '领取利息',
+    messageStaked: '质押成功！',
+    messageClaimed: '领取成功！',
   },
 };
 

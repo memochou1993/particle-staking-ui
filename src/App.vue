@@ -224,7 +224,7 @@
                             :indeterminate="isStarted"
                           />
                           <v-row justify="space-between">
-                            <v-col class="text-left">
+                            <v-col v-if="isStarted" class="text-left">
                               <div class="caption text-uppercase grey--text">
                                 {{ $t('validating') }}: <span class="caption text-uppercase grey--text">{{ displayHash(i) }}</span>
                               </div>
@@ -431,7 +431,7 @@ export default {
         });
         await res.wait();
         this.init();
-        this.message = { text: 'Staked Successfully!' };
+        this.message = { text: this.$t('messageStaked') };
         this.$refs.amount.focus();
       } catch (e) {
         if (e?.data?.message) {
@@ -451,7 +451,7 @@ export default {
         const res = await this.contract.claim();
         await res.wait();
         this.init();
-        this.message = { text: 'Cliamed Successfully!' };
+        this.message = { text: this.$t('messageClaimed') };
       } catch (e) {
         if (e?.data?.message) {
           this.message = { text: e.data.message.substring(e.data.message.indexOf('ParticleStaking')) };
