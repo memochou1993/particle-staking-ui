@@ -9,7 +9,7 @@
                 v-bind="attrs"
                 v-on="on"
                 rounded
-                class="dark-button subtitle-1 font-weight-bold ma-5"
+                class="dark-button subtitle-1 font-weight-bold mt-10 ml-8"
               >
                 {{ $t('language') }}
               </v-btn>
@@ -27,17 +27,11 @@
           </v-menu>
           <v-btn
             rounded
-            class="dark-button subtitle-1 font-weight-bold ma-5"
+            class="dark-button subtitle-1 font-weight-bold mt-10 mr-8"
             @click="connect"
           >
-            <span
-              v-if="account"
-              v-text="`${account.substring(0, 6)}...${account.substring(account.length - 4)}`"
-            />
-            <span
-              v-else
-              v-text="'Connect'"
-            />
+            <span v-if="account">{{ `${account.substring(0, 6)}...${account.substring(account.length - 4)}` }}</span>
+            <span v-else>Connect</span>
           </v-btn>
         </v-row>
         <v-row justify="center">
@@ -242,14 +236,14 @@
             </v-row>
           </v-col>
           <v-col :cols="12">
-            <div class="d-flex align-center justify-center subtitle-1 font-weight-bold my-6">
-              <span v-text="'White Paper'" class="cursor-pointer mx-3"/>
-              <span class="grey--text">|</span>
-              <img src="./assets/bscscan.png" width="32px" class="mx-3" />
-              <span class="grey--text">|</span>
-              <img src="./assets/telegram.png" width="32px" class="mx-3" />
-              <span class="grey--text">|</span>
-              <img src="./assets/twitter.png" width="32px" class="mx-3" />
+            <div class="text-center mt-10 mb-15">
+              <span class="subtitle-1 font-weight-bold cursor-pointer">White Paper</span>
+              <span>&nbsp;・&nbsp;</span>
+              <span class="subtitle-1 font-weight-bold cursor-pointer">BscScan</span>
+              <span>&nbsp;・&nbsp;</span>
+              <span class="subtitle-1 font-weight-bold cursor-pointer">Telegram</span>
+              <span>&nbsp;・&nbsp;</span>
+              <span class="subtitle-1 font-weight-bold cursor-pointer">Twitter</span>
             </div>
           </v-col>
           <AppAlert
