@@ -365,6 +365,9 @@ export default {
     isTestnet() {
       return process.env.VUE_APP_CHAIN_ID === '0x61';
     },
+    isLocal() {
+      return process.env.VUE_APP_CHAIN_ID === '0x539';
+    },
     query() {
       return new URLSearchParams(window.location.search);
     },
@@ -454,11 +457,17 @@ export default {
     isChainIdTestnet(chainId) {
       return Number(chainId) === parseInt('0x61', 16);
     },
+    isChainIdLocal(chainId) {
+      return Number(chainId) === parseInt('0x539', 16);
+    },
     initProvider() {
       this.web3Provider = new ethers.providers.Web3Provider(window.ethereum);
       this.web3Provider.provider.on('accountsChanged', () => this.run());
       this.web3Provider.provider.on('chainChanged', (chainId) => {
-        if ((this.isMainnet && this.isChainIdMainnet(chainId)) || (this.isTestnet && this.isChainIdTestnet(chainId))) {
+        const toMainnet = this.isMainnet && this.isChainIdMainnet(chainId);
+        const toTestnet = this.isTestnet && this.isChainIdTestnet(chainId);
+        const toLocal = this.isLocal && this.isChainIdLocal(chainId);
+        if (toMainnet || toTestnet || toLocal) {
           this.run();
           return;
         }
@@ -477,7 +486,7 @@ export default {
     },
     async switchChain() {
       return new Promise(async (res, rej) => {
-        this.web3Provider = new ethers.providers.Web3Provider(window.ethereum); // reload
+        this.web3Provider = new ethers.providers.Web3Provider(window.ethereum); // should reload provider
         const { chainId } = await this.web3Provider.getNetwork();
         if (this.isMainnet && !this.isChainIdMainnet(chainId)) {
           try {
@@ -541,11 +550,14 @@ export default {
           res(true);
           return;
         }
+        if (this.isLocal && !this.isChainIdLocal(chainId)) {
+          // should switch network manually
+        }
         res(false);
       });
     },
     async run() {
-      this.web3Provider = new ethers.providers.Web3Provider(window.ethereum); // reload provider
+      this.web3Provider = new ethers.providers.Web3Provider(window.ethereum); // should reload provider
       await this.loadAccount();
       if (this.account) await this.loadData();
       if (this.isOpened) await this.countdown();
