@@ -352,7 +352,7 @@ export default {
       return this.web3Provider.getSigner();
     },
     contract() {
-      return new ethers.Contract(process.env.VUE_APP_CONTRACT_ADDRESS, ParticleStaking.abi, this.signer);
+      return new ethers.Contract(process.env.VUE_APP_CONTRACT_ADDRESS, ParticleStaking, this.signer);
     },
     decimals() {
       return 18;
