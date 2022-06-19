@@ -38,7 +38,7 @@
           <template v-slot:default>
             <thead>
               <tr>
-                <th :width="200" class="subtitle-1 text-center">{{ $t('validatorCount') }}</th>
+                <th :width="200" class="subtitle-1 text-center">{{ $t('delegatorCount') }}</th>
                 <th :width="200" class="subtitle-1 text-center">{{ $t('dailyReturn') }}</th>
                 <th :width="200" class="subtitle-1 text-center">{{ $t('APR') }}</th>
               </tr>

@@ -87,7 +87,7 @@
                             <v-col :cols="6" class="subtitle-1 text-uppercase font-weight-medium gradient-text text-end">{{ formatNumber(accountBalance) }} {{ currency }}</v-col>
                           </v-row>
                           <v-row>
-                            <v-col :cols="6" class="subtitle-1 text-uppercase font-weight-medium gradient-text">{{ $t('validators') }}</v-col>
+                            <v-col :cols="6" class="subtitle-1 text-uppercase font-weight-medium gradient-text">{{ $t('delegators') }}</v-col>
                             <v-col :cols="6" class="subtitle-1 text-uppercase font-weight-medium gradient-text text-end">{{ stakes.length }}</v-col>
                           </v-row>
                           <v-row>
@@ -220,14 +220,14 @@
                 </v-col>
                 <v-col v-if="stakes.length > 0" :cols="12">
                   <v-card>
-                    <v-card-title class="justify-center text-h5 text-uppercase font-weight-bold gradient-text">{{ isStarted ? $t('workingValidators') : $t('preparedValidators') }}</v-card-title>
+                    <v-card-title class="justify-center text-h5 text-uppercase font-weight-bold gradient-text">{{ isStarted ? $t('workingDelegators') : $t('preparedDelegators') }}</v-card-title>
                     <v-divider />
                     <v-card-text>
                       <v-row no-gutters>
                         <v-col :cols="12" v-for="(stake, i) in [...stakes].reverse()" :key="stakes.length - i">
                           <v-row justify="space-between" class="subtitle-1 text-uppercase font-weight-medium gradient-text">
                             <v-col class="text-left">
-                              <span>{{ `${$t('validator')} #${stakes.length - i}` }}</span>
+                              <span>{{ `${$t('delegator')} #${stakes.length - i}` }}</span>
                             </v-col>
                             <v-col class="text-right">
                               <template v-if="calculateClaimable(stake) > 0">
@@ -246,7 +246,7 @@
                             <v-row justify="space-between">
                               <v-col v-if="isStarted" class="text-left">
                                 <div class="caption text-uppercase grey--text">
-                                  {{ $t('validating') }}: <span class="caption text-uppercase grey--text">{{ displayHash(i) }}</span>
+                                  {{ $t('processing') }}: <span class="caption text-uppercase grey--text">{{ displayHash(i) }}</span>
                                 </div>
                               </v-col>
                               <v-col class="text-right">
