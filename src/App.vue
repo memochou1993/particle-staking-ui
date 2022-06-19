@@ -265,7 +265,7 @@
           <v-col :cols="12">
             <div class="text-center mt-10 mb-15">
               <a
-                :href="`${env === 'production' ? 'https://bscscan.com' : 'https://testnet.bscscan.com'}/address/${contractAddress}`"
+                :href="`${blockExplorerUrl}/address/${contractAddress}`"
                 rel="noopener noreferrer nofollow"
                 target="_blank"
                 class="subtitle-1 font-weight-bold cursor-pointer white--text text-decoration-none"
@@ -362,14 +362,14 @@ export default {
     query() {
       return new URLSearchParams(window.location.search);
     },
-    env() {
-      return process.env.NODE_ENV;
-    },
     currency() {
       return process.env.VUE_APP_CURRENCY;
     },
     contractAddress() {
       return process.env.VUE_APP_CONTRACT_ADDRESS;
+    },
+    blockExplorerUrl() {
+      return process.env.VUE_APP_BLOCK_EXPLORER_URL;
     },
     signer() {
       return this.web3Provider.getSigner();
