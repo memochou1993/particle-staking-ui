@@ -107,12 +107,12 @@
                             <v-col :cols="6">
                               <v-btn
                                 :disabled="!account || !isOpened"
-                                :loading="loading === 'deposit'"
+                                :loading="loading === 'stake'"
                                 block
                                 outlined
                                 rounded
                                 class="subtitle-1 font-weight-bold"
-                                @click="deposit"
+                                @click="stake"
                               >
                                 {{ $t('buttonStake') }}
                               </v-btn>
@@ -442,12 +442,12 @@ export default {
     connect() {
       this.loadAccount();
     },
-    async deposit() {
-      this.loading = 'deposit';
+    async stake() {
+      this.loading = 'stake';
       try {
         if (!Number(this.amount)) return;
         const amount = ethers.BigNumber.from(1).mul(ethers.FixedNumber.fromString(this.amount));
-        const res = await this.contract.deposit(this.referrer, {
+        const res = await this.contract.stake(this.referrer, {
           value: amount,
         });
         await res.wait();
