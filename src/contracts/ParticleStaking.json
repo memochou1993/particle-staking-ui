@@ -75,7 +75,7 @@
 			},
 			{
 				"internalType": "uint256",
-				"name": "inviteeCount",
+				"name": "referred",
 				"type": "uint256"
 			},
 			{

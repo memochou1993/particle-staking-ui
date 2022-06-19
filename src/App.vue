@@ -200,8 +200,8 @@
                             </v-col>
                           </v-row>
                           <v-row>
-                            <v-col :cols="6" class="subtitle-1 text-uppercase font-weight-medium gradient-text">{{ $t('invitees') }}</v-col>
-                            <v-col :cols="6" class="subtitle-1 text-uppercase font-weight-medium gradient-text text-end">{{ Number(stakeholder ? stakeholder.inviteeCount : 0).toLocaleString() }}</v-col>
+                            <v-col :cols="6" class="subtitle-1 text-uppercase font-weight-medium gradient-text">{{ $t('referred') }}</v-col>
+                            <v-col :cols="6" class="subtitle-1 text-uppercase font-weight-medium gradient-text text-end">{{ Number(stakeholder ? stakeholder.referred : 0).toLocaleString() }}</v-col>
                           </v-row>
                           <v-row>
                             <v-col :cols="6" class="subtitle-1 text-uppercase font-weight-medium gradient-text">{{ $t('rebateClaimed') }}</v-col>
