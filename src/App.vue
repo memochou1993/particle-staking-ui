@@ -264,8 +264,6 @@
             <div class="text-center mt-10 mb-15">
               <span class="subtitle-1 font-weight-bold cursor-pointer">BscScan</span>
               <span>&nbsp;・&nbsp;</span>
-              <span class="subtitle-1 font-weight-bold cursor-pointer">Telegram</span>
-              <span>&nbsp;・&nbsp;</span>
               <span class="subtitle-1 font-weight-bold cursor-pointer">Twitter</span>
             </div>
           </v-col>
