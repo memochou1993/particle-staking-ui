@@ -1,5 +1,6 @@
 <template>
   <v-snackbar
+    :timeout="timeout"
     :value="true"
     color="pink lighten-3"
     text
@@ -19,6 +20,10 @@ export default {
     text: {
       type: String,
       required: true,
+    },
+    timeout: {
+      type: Number,
+      default: 5000,
     },
   },
 };

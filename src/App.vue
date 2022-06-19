@@ -286,6 +286,7 @@
           <AppAlert
             v-if="message"
             :text="message.text"
+            :timeout="message.timeout"
             @onClose="message = null"
           />
         </v-row>
@@ -472,6 +473,7 @@ export default {
         const res = await this.contract.stake(this.referrer, {
           value: amount,
         });
+        this.message = { text: this.$t('messageConfirming'), timeout: 1000 * 30 };
         await res.wait();
         this.init();
         this.message = { text: this.$t('messageStaked') };
@@ -492,6 +494,7 @@ export default {
       this.loading = 'claim';
       try {
         const res = await this.contract.claim();
+        this.message = { text: this.$t('messageConfirming'), timeout: 1000 * 30 };
         await res.wait();
         this.init();
         this.message = { text: this.$t('messageClaimed') };
