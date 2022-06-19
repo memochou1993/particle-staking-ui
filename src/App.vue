@@ -359,6 +359,12 @@ export default {
     isHome: false,
   }),
   computed: {
+    isMainnet() {
+      return process.env.VUE_APP_CHAIN_ID === '0x38';
+    },
+    isTestnet() {
+      return process.env.VUE_APP_CHAIN_ID === '0x61';
+    },
     query() {
       return new URLSearchParams(window.location.search);
     },
@@ -369,7 +375,13 @@ export default {
       return process.env.VUE_APP_CONTRACT_ADDRESS;
     },
     blockExplorerUrl() {
-      return process.env.VUE_APP_BLOCK_EXPLORER_URL;
+      if (this.isMainnet) {
+        return 'https://bscscan.com';
+      }
+      if (this.isTestnet) {
+        return 'https://testnet.bscscan.com';
+      }
+      return '';
     },
     signer() {
       return this.web3Provider.getSigner();
@@ -433,7 +445,107 @@ export default {
   },
   methods: {
     async init() {
-      await this.loadWeb3Provider();
+      await this.initProvider();
+      await this.connect();
+    },
+    isChainIdMainnet(chainId) {
+      return Number(chainId) === parseInt('0x38', 16);
+    },
+    isChainIdTestnet(chainId) {
+      return Number(chainId) === parseInt('0x61', 16);
+    },
+    initProvider() {
+      this.web3Provider = new ethers.providers.Web3Provider(window.ethereum);
+      this.web3Provider.provider.on('accountsChanged', () => this.run());
+      this.web3Provider.provider.on('chainChanged', (chainId) => {
+        if ((this.isMainnet && this.isChainIdMainnet(chainId)) || (this.isTestnet && this.isChainIdTestnet(chainId))) {
+          this.run();
+          return;
+        }
+        this.message = { text: 'Network is not correct' };
+      });
+    },
+    async connect() {
+      try {
+        const switched = await this.switchChain();
+        if (!switched) await this.run();
+      } catch (e) {
+        if (e?.message) {
+          this.message = { text: e.message };
+        }
+      }
+    },
+    async switchChain() {
+      return new Promise(async (res, rej) => {
+        this.web3Provider = new ethers.providers.Web3Provider(window.ethereum); // reload
+        const { chainId } = await this.web3Provider.getNetwork();
+        if (this.isMainnet && !this.isChainIdMainnet(chainId)) {
+          try {
+            await this.web3Provider.send('wallet_switchEthereumChain', [{ chainId: '0x38' }]);
+          } catch (e) {
+            if (e.code === 4902) {
+              try {
+                await window.ethereum.request({
+                  method: 'wallet_addEthereumChain',
+                  params: [
+                    {
+                      chainId: '0x38',
+                      rpcUrls: ['https://bsc-dataseed.binance.org/'],
+                      chainName: 'BSC',
+                      nativeCurrency: {
+                        name: 'BNB',
+                        symbol: 'BNB',
+                        decimals: 18,
+                      },
+                      blockExplorerUrls: ['https://bscscan.com'],
+                    },
+                  ],
+                });
+              } catch (e) {
+                rej(e);
+              }
+            }
+            rej(e);
+          }
+          res(true);
+          return;
+        }
+        if (this.isTestnet && !this.isChainIdTestnet(chainId)) {
+          try {
+            await this.web3Provider.send('wallet_switchEthereumChain', [{ chainId: '0x61' }]);
+          } catch (e) {
+            if (e.code === 4902) {
+              try {
+                await window.ethereum.request({
+                  method: 'wallet_addEthereumChain',
+                  params: [
+                    {
+                      chainId: '0x61',
+                      rpcUrls: ['https://data-seed-prebsc-1-s1.binance.org:8545/'],
+                      chainName: 'BSC Testnet',
+                      nativeCurrency: {
+                        name: 'BNB',
+                        symbol: 'BNB',
+                        decimals: 18,
+                      },
+                      blockExplorerUrls: ['https://testnet.bscscan.com'],
+                    },
+                  ],
+                });
+              } catch (e) {
+                rej(e);
+              }
+            }
+            rej(e);
+          }
+          res(true);
+          return;
+        }
+        res(false);
+      });
+    },
+    async run() {
+      this.web3Provider = new ethers.providers.Web3Provider(window.ethereum); // reload provider
       await this.loadAccount();
       if (this.account) await this.loadData();
       if (this.isOpened) await this.countdown();
@@ -441,13 +553,15 @@ export default {
       if (this.isStarted) this.updateTime();
       this.reset();
     },
-    loadWeb3Provider() {
-      this.web3Provider = new ethers.providers.Web3Provider(window.ethereum);
-      this.web3Provider.provider.on('accountsChanged', () => this.init());
-    },
     async loadAccount() {
-      const [account] = await this.web3Provider.send('eth_requestAccounts');
-      this.account = account;
+      try {
+        const [account] = await this.web3Provider.send('eth_requestAccounts');
+        this.account = account;
+      } catch (e) {
+        if (e?.message) {
+          this.message = { text: e.message };
+        }
+      }
     },
     async loadData() {
       this.accountBalance = await this.web3Provider.getBalance(this.account);
@@ -462,9 +576,6 @@ export default {
       this.$i18n.locale = locale;
       localStorage.setItem('locale', locale);
     },
-    connect() {
-      this.loadAccount();
-    },
     async stake() {
       this.loading = 'stake';
       try {
@@ -475,7 +586,7 @@ export default {
         });
         this.message = { text: this.$t('messageConfirming'), timeout: 1000 * 30 };
         await res.wait();
-        this.init();
+        this.run();
         this.message = { text: this.$t('messageStaked') };
         this.$refs.amount.focus();
       } catch (e) {
@@ -496,7 +607,7 @@ export default {
         const res = await this.contract.claim();
         this.message = { text: this.$t('messageConfirming'), timeout: 1000 * 30 };
         await res.wait();
-        this.init();
+        this.run();
         this.message = { text: this.$t('messageClaimed') };
       } catch (e) {
         if (e?.data?.message) {
