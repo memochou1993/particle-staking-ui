@@ -264,9 +264,23 @@
           </template>
           <v-col :cols="12">
             <div class="text-center mt-10 mb-15">
-              <span class="subtitle-1 font-weight-bold cursor-pointer">BscScan</span>
+              <a
+                :href="`${env === 'production' ? 'https://bscscan.com' : 'https://testnet.bscscan.com'}/address/${contractAddress}`"
+                rel="noopener noreferrer nofollow"
+                target="_blank"
+                class="subtitle-1 font-weight-bold cursor-pointer white--text text-decoration-none"
+              >
+                BscScan
+              </a>
               <span>&nbsp;・&nbsp;</span>
-              <span class="subtitle-1 font-weight-bold cursor-pointer">Twitter</span>
+              <a
+                href="https://twitter.com/particlestaking"
+                rel="noopener noreferrer nofollow"
+                target="_blank"
+                class="subtitle-1 font-weight-bold cursor-pointer white--text text-decoration-none"
+              >
+                Twitter
+              </a>
             </div>
           </v-col>
           <AppAlert
@@ -347,8 +361,14 @@ export default {
     query() {
       return new URLSearchParams(window.location.search);
     },
+    env() {
+      return process.env.NODE_ENV;
+    },
     currency() {
       return process.env.VUE_APP_CURRENCY;
+    },
+    contractAddress() {
+      return process.env.VUE_APP_CONTRACT_ADDRESS;
     },
     signer() {
       return this.web3Provider.getSigner();
