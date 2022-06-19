@@ -54,7 +54,9 @@
           </v-col>
           <template v-if="isHome">
             <v-col :cols="12" :md="8">
-              <WhitePaper />
+              <WhitePaper
+                :currency="currency"
+              />
             </v-col>
           </template>
           <template v-else>

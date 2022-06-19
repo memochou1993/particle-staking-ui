@@ -20,7 +20,7 @@
           {{ $t('whitepaperT2') }}
         </h2>
         <p>
-          {{ $t('whitepaperT2P1') }}
+          {{ $t('whitepaperT2P1', { currency }) }}
         </p>
         <h2>
           {{ $t('whitepaperT3') }}
@@ -65,6 +65,12 @@
 <script>
 export default {
   name: 'WhitePaper',
+  props: {
+    currency: {
+      type: String,
+      required: true,
+    },
+  },
 };
 </script>
 
