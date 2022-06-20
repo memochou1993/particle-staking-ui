@@ -477,7 +477,7 @@ export default {
                       nativeCurrency: {
                         name: process.env.VUE_APP_CURRENCY_NAME,
                         symbol: process.env.VUE_APP_CURRENCY_SYMBOL,
-                        decimals: process.env.VUE_APP_CURRENCY_DECIMALS,
+                        decimals: Number(process.env.VUE_APP_CURRENCY_DECIMALS),
                       },
                       blockExplorerUrls: [process.env.VUE_APP_BLOCK_EXPLORER_URL],
                     },
