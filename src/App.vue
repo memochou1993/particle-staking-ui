@@ -359,32 +359,17 @@ export default {
     isHome: false,
   }),
   computed: {
-    isMainnet() {
-      return process.env.VUE_APP_CHAIN_ID === '0x38';
-    },
-    isTestnet() {
-      return process.env.VUE_APP_CHAIN_ID === '0x61';
-    },
-    isLocal() {
-      return process.env.VUE_APP_CHAIN_ID === '0x539';
-    },
     query() {
       return new URLSearchParams(window.location.search);
     },
     currency() {
-      return process.env.VUE_APP_CURRENCY;
+      return process.env.VUE_APP_CURRENCY_SYMBOL;
     },
     contractAddress() {
       return process.env.VUE_APP_CONTRACT_ADDRESS;
     },
     blockExplorerUrl() {
-      if (this.isMainnet) {
-        return 'https://bscscan.com';
-      }
-      if (this.isTestnet) {
-        return 'https://testnet.bscscan.com';
-      }
-      return '';
+      return process.env.VUE_APP_BLOCK_EXPLORER_URL;
     },
     signer() {
       return this.web3Provider.getSigner();
@@ -451,23 +436,11 @@ export default {
       await this.initProvider();
       await this.connect();
     },
-    isChainIdMainnet(chainId) {
-      return Number(chainId) === parseInt('0x38', 16);
-    },
-    isChainIdTestnet(chainId) {
-      return Number(chainId) === parseInt('0x61', 16);
-    },
-    isChainIdLocal(chainId) {
-      return Number(chainId) === parseInt('0x539', 16);
-    },
     initProvider() {
       this.web3Provider = new ethers.providers.Web3Provider(window.ethereum);
       this.web3Provider.provider.on('accountsChanged', () => this.run());
       this.web3Provider.provider.on('chainChanged', (chainId) => {
-        const toMainnet = this.isMainnet && this.isChainIdMainnet(chainId);
-        const toTestnet = this.isTestnet && this.isChainIdTestnet(chainId);
-        const toLocal = this.isLocal && this.isChainIdLocal(chainId);
-        if (toMainnet || toTestnet || toLocal) {
+        if (chainId === process.env.VUE_APP_CHAIN_ID) {
           this.run();
           return;
         }
@@ -488,9 +461,9 @@ export default {
       return new Promise(async (res, rej) => {
         this.web3Provider = new ethers.providers.Web3Provider(window.ethereum); // should reload provider
         const { chainId } = await this.web3Provider.getNetwork();
-        if (this.isMainnet && !this.isChainIdMainnet(chainId)) {
+        if (chainId !== parseInt(process.env.VUE_APP_CHAIN_ID, 16)) {
           try {
-            await this.web3Provider.send('wallet_switchEthereumChain', [{ chainId: '0x38' }]);
+            await this.web3Provider.send('wallet_switchEthereumChain', [{ chainId: process.env.VUE_APP_CHAIN_ID }]);
           } catch (e) {
             if (e.code === 4902) {
               try {
@@ -498,15 +471,15 @@ export default {
                   method: 'wallet_addEthereumChain',
                   params: [
                     {
-                      chainId: '0x38',
-                      rpcUrls: ['https://bsc-dataseed.binance.org/'],
-                      chainName: 'BSC',
+                      chainId: process.env.VUE_APP_CHAIN_ID,
+                      rpcUrls: [process.env.VUE_APP_RPC_URL],
+                      chainName: process.env.VUE_APP_CHAIN_NAME,
                       nativeCurrency: {
-                        name: 'BNB',
-                        symbol: 'BNB',
-                        decimals: 18,
+                        name: process.env.VUE_APP_CURRENCY_NAME,
+                        symbol: process.env.VUE_APP_CURRENCY_SYMBOL,
+                        decimals: process.env.VUE_APP_CURRENCY_DECIMALS,
                       },
-                      blockExplorerUrls: ['https://bscscan.com'],
+                      blockExplorerUrls: [process.env.VUE_APP_BLOCK_EXPLORER_URL],
                     },
                   ],
                 });
@@ -518,40 +491,6 @@ export default {
           }
           res(true);
           return;
-        }
-        if (this.isTestnet && !this.isChainIdTestnet(chainId)) {
-          try {
-            await this.web3Provider.send('wallet_switchEthereumChain', [{ chainId: '0x61' }]);
-          } catch (e) {
-            if (e.code === 4902) {
-              try {
-                await window.ethereum.request({
-                  method: 'wallet_addEthereumChain',
-                  params: [
-                    {
-                      chainId: '0x61',
-                      rpcUrls: ['https://data-seed-prebsc-1-s1.binance.org:8545/'],
-                      chainName: 'BSC Testnet',
-                      nativeCurrency: {
-                        name: 'BNB',
-                        symbol: 'BNB',
-                        decimals: 18,
-                      },
-                      blockExplorerUrls: ['https://testnet.bscscan.com'],
-                    },
-                  ],
-                });
-              } catch (e) {
-                rej(e);
-              }
-            }
-            rej(e);
-          }
-          res(true);
-          return;
-        }
-        if (this.isLocal && !this.isChainIdLocal(chainId)) {
-          // should switch network manually
         }
         res(false);
       });
@@ -583,10 +522,6 @@ export default {
       this.stakeholder = await this.contract.stakeholders(this.account);
       this.isStakeholder = await this.contract.isStakeholder(this.account);
       this.stakes = this.isStakeholder ? await this.contract.stakesOf(this.account) : [];
-    },
-    selectLanguage(locale) {
-      this.$i18n.locale = locale;
-      localStorage.setItem('locale', locale);
     },
     async stake() {
       this.loading = 'stake';
@@ -678,6 +613,10 @@ export default {
     copy(event) {
       event.target.select();
       document.execCommand('copy');
+    },
+    selectLanguage(locale) {
+      this.$i18n.locale = locale;
+      localStorage.setItem('locale', locale);
     },
   },
 };
