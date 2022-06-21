@@ -409,7 +409,7 @@ export default {
       return `${process.env.VUE_APP_URL}?ref=${this.account || ''}`;
     },
     timerStatus() {
-      if (this.startTime === null) return '';
+      if (this.startTime === null) return this.$t('unknown');
       if (!this.isOpened) return this.$t('preparing');
       if (!this.isStarted) return this.$t('countdown');
       return this.$t('running');
