@@ -281,6 +281,15 @@
               >
                 Twitter
               </a>
+              <span>&nbsp;・&nbsp;</span>
+              <a
+                href="https://t.me/particlestaking"
+                rel="noopener noreferrer nofollow"
+                target="_blank"
+                class="subtitle-1 font-weight-bold cursor-pointer white--text text-decoration-none"
+              >
+                Telegram
+              </a>
             </div>
           </v-col>
           <AppAlert
