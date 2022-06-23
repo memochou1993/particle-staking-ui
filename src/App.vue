@@ -2,7 +2,7 @@
   <v-app>
     <v-main>
       <v-container fluid>
-        <v-row justify="space-between" :class="['my-8', $vuetify.breakpoint.xsOnly ? 'mx-2' : 'mx-8']">
+        <v-row justify="space-between" :class="['mt-8 mb-4', $vuetify.breakpoint.xsOnly ? 'mx-2' : 'mx-8']">
           <div>
             <v-btn
               rounded
