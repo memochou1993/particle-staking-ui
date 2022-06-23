@@ -2,21 +2,21 @@
   <v-app>
     <v-main>
       <v-container fluid>
-        <v-row justify="space-between" :class="['mt-10', $vuetify.breakpoint.xsOnly ? 'px-2' : 'px-10']">
+        <v-row justify="space-between" :class="['my-8', $vuetify.breakpoint.xsOnly ? 'mx-2' : 'mx-8']">
           <div>
             <v-btn
               rounded
-              class="dark-button subtitle-1 font-weight-bold"
+              class="dark-button subtitle-1 font-weight-bold ma-2"
               @click="isHome = !isHome"
             >
               <span v-if="isHome">{{ $t('buttonLaunch') }}</span>
               <span v-else>{{ $t('whitePaper') }}</span>
             </v-btn>
           </div>
-          <div>
+          <div :class="[$vuetify.breakpoint.xsOnly ? 'd-flex flex-column' : '']">
             <v-btn
               rounded
-              class="dark-button subtitle-1 font-weight-bold mr-3"
+              class="dark-button subtitle-1 font-weight-bold ma-2"
               @click="connect"
             >
               <span v-if="account">{{ `${account.substring(0, 6)}...${$vuetify.breakpoint.xsOnly ? '' : account.substring(account.length - 4)}` }}</span>
@@ -28,7 +28,7 @@
                   v-bind="attrs"
                   v-on="on"
                   rounded
-                  class="dark-button subtitle-1 font-weight-bold"
+                  class="dark-button subtitle-1 font-weight-bold ma-2"
                 >
                   {{ $t('language') }}
                 </v-btn>

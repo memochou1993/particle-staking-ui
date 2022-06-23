@@ -2,7 +2,7 @@
   <v-card>
     <v-card-title class="justify-center text-h4 text-uppercase font-weight-bold gradient-text">{{ $t('whitePaper') }}</v-card-title>
     <v-divider />
-    <v-card-text>
+    <v-card-text :class="$vuetify.breakpoint.xsOnly ? '' : 'pa-12'">
       <div>
         <p>
           {{ $t('whitepaperP1') }}
@@ -90,7 +90,6 @@ a {
 }
 .v-card__text {
   max-height: 1000px;
-  padding: 48px;
 }
 .v-card__text {
   max-height: 1440px;
