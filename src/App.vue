@@ -192,11 +192,10 @@
                                 dense
                                 hide-details
                                 readonly
-                                ref="referralLink"
                                 rounded
                                 solo
-                                @click:append="$refs.referralLink.focus()"
-                                @focus="copy($event)"
+                                @click:append="copy"
+                                @focus="copy"
                                 class="cursor-pointer"
                               />
                             </v-col>
@@ -619,9 +618,9 @@ export default {
     reset() {
       this.amount = '';
     },
-    copy(event) {
-      event.target.select();
-      document.execCommand('copy');
+    async copy() {
+      await this.$copyText(`${this.$t('promotion')}${this.referralLink}`);
+      this.message = { text: this.$t('messageCopied') };
     },
     selectLanguage(locale) {
       this.$i18n.locale = locale;
