@@ -355,10 +355,12 @@ export default {
       {
         locale: 'en',
         text: 'English',
-      }, {
-        locale: 'zhTW',
-        text: '繁體中文',
-      }, {
+      },
+      // {
+      //   locale: 'zhTW',
+      //   text: '繁體中文',
+      // },
+      {
         locale: 'zhCN',
         text: '简体中文',
       },
